@@ -1,0 +1,22 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/media/eureka/eureka/GNSS Algorithm/SPP/CMat.cpp
+math.h
+-
+CMat.h
+/media/eureka/eureka/GNSS Algorithm/SPP/CMat.h
+iostream
+-
+
+/media/eureka/eureka/GNSS Algorithm/SPP/CMat.h
+iostream
+-
+string
+-
+

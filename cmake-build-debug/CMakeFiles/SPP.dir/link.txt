@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/SPP.dir/main.c.o CMakeFiles/SPP.dir/com.c.o CMakeFiles/SPP.dir/SatPos.c.o CMakeFiles/SPP.dir/CMat.c.o CMakeFiles/SPP.dir/rnx.c.o  -o SPP  -lm 

@@ -1,0 +1,1 @@
+/usr/bin/cc -g   CMakeFiles/SatPosCal.dir/main.c.o CMakeFiles/SatPosCal.dir/com.c.o CMakeFiles/SatPosCal.dir/SatPos.c.o CMakeFiles/SatPosCal.dir/CMat.c.o CMakeFiles/SatPosCal.dir/rnx.c.o  -o SatPosCal 
