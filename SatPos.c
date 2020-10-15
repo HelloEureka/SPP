@@ -111,7 +111,7 @@ Coord SatPos_CorrSpread(GPS_BRDEPH *gps_brd, Coord *groundRef, double t) {
     double t_spread, t_spread_prime, s2g_dist;
     t_spread_prime = 0;
     Coord satPos = SatPos_Cal(gps_brd, t - 0.07); //signal spreads for about 0.07s
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 5; i++) {
         s2g_dist = Dist(&satPos, groundRef);
         t_spread = s2g_dist / CLIGHT;
         if (fabs(t_spread_prime - t_spread) < 1e-10) {
@@ -125,7 +125,8 @@ Coord SatPos_CorrSpread(GPS_BRDEPH *gps_brd, Coord *groundRef, double t) {
 
 double SatPos_CorrEarthRot(Coord *satPos, Coord *groundRef) {
     double delta_rho = -
-            OMEGA_E / CLIGHT * (satPos->Y * (groundRef->X - satPos->X) - satPos->X * (groundRef->Y - satPos->Y));
+                               OMEGA_E / CLIGHT *
+                       (satPos->Y * (groundRef->X - satPos->X) - satPos->X * (groundRef->Y - satPos->Y));
     return delta_rho;
     //以下直接改卫星位置
 //    double s2g_dist = Dist(&satPos, groundRef);
@@ -140,19 +141,26 @@ double SatPos_CorrEarthRot(Coord *satPos, Coord *groundRef) {
 
 double SatPos_CorrRelative(Coord *satPos, Coord *satPos_v) {
     double delta_rho = 2.0 / CLIGHT * (satPos->X * satPos_v->X +
-                                        satPos->Y * satPos_v->Y +
-                                        satPos->Z * satPos_v->Z);
+                                       satPos->Y * satPos_v->Y +
+                                       satPos->Z * satPos_v->Z);
     return delta_rho;
 }
 
 
-Coord SatVel(GPS_BRDEPH *gps_brd, Coord *groundRef, double t) {
+Coord SatVel(GPS_BRDEPH *gps_brd, double t) {
     double dt = 1e-8;
-    Coord posLast = SatPos_CorrSpread(gps_brd, groundRef, t - dt);
-    Coord posNext = SatPos_CorrSpread(gps_brd, groundRef, t + dt);
+    Coord posLast = SatPos_Cal(gps_brd, t - dt);
+    Coord posNext = SatPos_Cal(gps_brd, t + dt);
     Coord vel = {posNext.X - posLast.X, posNext.Y - posLast.Y, posNext.Z - posLast.Z};
     vel.X /= (2 * dt);
     vel.Y /= (2 * dt);
     vel.Z /= (2 * dt);
     return vel;
 }
+
+
+double SatClk(GPS_BRDEPH *gps_brd, double t0) {
+    double dt = t0 - gps_brd->toe;
+    return (gps_brd->a0 + gps_brd->a1 * dt + gps_brd->a2 * dt * dt) * CLIGHT;
+}
+

@@ -16,6 +16,8 @@ double *mat(int n, int m) {
         return NULL;
     }
     memset(p, 0, sizeof(double) * m * n);
+    for (int i = 0; i < m * n - 1; i++)
+        p[i] = 0;
     return p;
 }
 
@@ -187,14 +189,14 @@ void demo() {
     double norm[3 * 3] = {1, 2, 3, 6, 3, 5, 4, 8, 9};
     double A[3] = {4, 5, 6}, L[3];
     CMat_Matmul("NN", 3, 1, 3, 1.0, norm, 3, A, 3, 0.0, L, 3);
-    printf("norm(3*3) * A(3*1) = L(3*1)\n")  ;
+    printf("norm(3*3) * A(3*1) = L(3*1)\n");
     CMat_PrintMatrix(norm, 3, 3, 3, "norm");
     CMat_PrintMatrix(A, 3, 3, 1, "A");
     CMat_PrintMatrix(L, 3, 3, 1, "L");
 
     int status = CMat_Inverse(norm, 3, 3);
     if (status == -1) {
-        printf("Singular matrix of norm\n") ;
+        printf("Singular matrix of norm\n");
         exit(1);
     }
     printf("inverse of norm(3*3) is :\n");

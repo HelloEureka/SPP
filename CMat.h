@@ -19,7 +19,7 @@ static int CMat_Inverse(double *A, int lda, int n);
 
 static void CMat_PrintMatrix(double *mat, int lda, int row, int col, const char *premsg);
 
-static double *mat(int n, int m);
+double *mat(int n, int m);
 
 static int *imat(int n, int m);
 
