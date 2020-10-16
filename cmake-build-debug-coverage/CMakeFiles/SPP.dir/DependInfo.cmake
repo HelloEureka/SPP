@@ -4,16 +4,16 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "/media/eureka/eureka/GNSS Algorithm/SPP/CMat.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/CMat.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/SPPAlgorithm.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/SatPos.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/azel.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/azel.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/com.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/com.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/iono.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/iono.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/main.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/main.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/rnx.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/rnx.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/time.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/time.c.o"
-  "/media/eureka/eureka/GNSS Algorithm/SPP/trop.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/trop.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/CMat.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/CMat.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/SPPAlgorithm.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/SatPos.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/SatPos.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/azel.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/azel.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/com.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/com.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/iono.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/iono.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/main.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/main.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/rnx.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/rnx.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/time.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/time.c.o"
+  "/media/eureka/eureka/GNSS Algorithm/SPP/src/trop.c" "/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/src/trop.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

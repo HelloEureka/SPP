@@ -1,0 +1,361 @@
+        -:    0:Source:/media/eureka/eureka/GNSS Algorithm/SPP/com.c
+        -:    0:Graph:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/com.c.gcno
+        -:    0:Data:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/com.c.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2: * com.c
+        -:    3: *
+        -:    4: *  Created on: 2020年9月20日
+        -:    5: *      Author: xps
+        -:    6: */
+        -:    7:#include <stdlib.h>
+        -:    8:#include <math.h>
+        -:    9:#include <string.h>
+        -:   10:#include "rnx.h"
+       64:   11:char *trim(char *pStr)
+        -:   12:{
+       64:   13:	int len = strlen(pStr);
+       64:   14:	char *pIndex = pStr + len - 1;
+       64:   15:	while (*pIndex == '\n' || *pIndex == '\r' || *pIndex == '\0' || *pIndex == ' ')
+       64:   15-block  0
+       64:   15-block  1
+       64:   15-block  2
+       64:   15-block  3
+       64:   15-block  4
+        -:   16:	{
+    #####:   17:		*pIndex = '\0';
+    #####:   18:		pIndex--;
+    %%%%%:   18-block  0
+        -:   19:	}
+       64:   20:	return pStr;
+       64:   20-block  0
+        -:   21:}
+        -:   22:
+        -:   23://计算有效字符数, 去除空格换行回车
+   212373:   24:int len_trim(char *pStr)
+        -:   25:{
+   212373:   26:	int length = strlen(pStr);
+   212373:   27:	int count = length;
+        -:   28:	int i;
+   426766:   29:	for (i = length - 1; i >= 0; i--)
+   212373:   29-block  0
+   426766:   29-block  1
+        -:   30:	{
+   422238:   31:		if (pStr[i] == '\0' || pStr[i] == '\n' || pStr[i] == '\r' || pStr[i] == ' ')
+   422238:   31-block  0
+   422238:   31-block  1
+   379585:   31-block  2
+   379585:   31-block  3
+        -:   32:			//				空格				换行				回车			??? 和空格一样
+   214393:   33:			count--;
+   214393:   33-block  0
+        -:   34:		else
+        -:   35:			break;
+        -:   36:	}
+   212373:   37:	return count;
+   212373:   37-block  0
+        -:   38:}
+        -:   39:
+        -:   40:/**********************CHANGED*****************************/
+       64:   41:int pointer_string(int row, int col, char *string_array, char *string)
+        -:   42:{
+        -:   43:	int i;
+       64:   44:	char *pStr = (char *)string_array;
+       64:   45:	trim(string);
+       64:   45-block  0
+        -:   46:
+     1020:   47:	for (i = 0; i < row; i++)
+      956:   47-block  0
+     1020:   47-block  1
+        -:   48:	{
+     1001:   49:		if (strcmp(pStr + i * col, string) == 0)
+     1001:   49-block  0
+       45:   50:			break;
+       45:   50-block  0
+        -:   51:	}
+       64:   52:	if (i == row)
+       64:   52-block  0
+       19:   53:		i = -1;
+       19:   53-block  0
+       64:   54:	return i;
+       64:   54-block  0
+        -:   55:}
+        -:   56:
+        -:   57://from left to right
+     7287:   58:int index_string(char *src, char key)
+        -:   59:{
+     7287:   60:	int len = strlen(src);
+        -:   61:	int i;
+    24775:   62:	for (i = 0; i < len; i++)
+     7287:   62-block  0
+    17488:   62-block  1
+    24775:   62-block  2
+        -:   63:	{
+    24775:   64:		if (src[i] == key)
+    24775:   64-block  0
+     7287:   65:			break;
+     7287:   65-block  0
+        -:   66:	}
+     7287:   67:	if (i == len)
+     7287:   67-block  0
+    #####:   68:		return -1;
+    %%%%%:   68-block  0
+        -:   69:	else
+     7287:   70:		return i;
+     7287:   70-block  0
+        -:   71:}
+        -:   72:
+        -:   73:// start: started with index of zero
+   170268:   74:char *substringEx(char *dest, char *src, int start, int length)
+        -:   75:{
+   170268:   76:	int i, j = 0;
+   170268:   77:	int len = strlen(src);
+   170268:   78:	if (start < 0 || start >= len || start + length > len)
+   170268:   78-block  0
+   170268:   78-block  1
+   170268:   78-block  2
+        -:   79:	{
+    #####:   80:		dest[0] = '\0';
+    #####:   81:		return NULL;
+    %%%%%:   81-block  0
+        -:   82:	}
+        -:   83:
+  3403733:   84:	for (i = start; i < start + length; i++)
+   170268:   84-block  0
+  3403733:   84-block  1
+        -:   85:	{
+  3233465:   86:		dest[j] = src[i];
+  3233465:   87:		j++;
+  3233465:   87-block  0
+        -:   88:	}
+        -:   89:
+   170268:   90:	dest[j] = '\0';
+   170268:   91:	return dest;
+   170268:   91-block  0
+        -:   92:}
+        -:   93:
+    42385:   94:void filleph(char *line, double ver)
+        -:   95:{
+    42385:   96:	int i, len, cpre = 4, ncount;
+        -:   97:	char tmp[128];
+        -:   98:	char xline[1024];
+    42385:   99:	if (ver < 3.0)
+    42385:   99-block  0
+    #####:  100:		cpre = 3;
+    %%%%%:  100-block  0
+    42385:  101:	len = len_trim(line);
+    42385:  101-block  0
+   127809:  102:	for (i = len; i < cpre + 19 * 4; i++)
+   127809:  102-block  0
+        -:  103:	{
+    85424:  104:		line[i] = ' ';
+    85424:  104-block  0
+        -:  105:	}
+    42385:  106:	line[cpre + 19 * 4] = '\0';
+   211925:  107:	for (i = 0; i < 4; i++)
+    42385:  107-block  0
+   169540:  107-block  1
+   211925:  107-block  2
+        -:  108:	{
+   169540:  109:		ncount = cpre + 19 * (i + 1);
+   169540:  110:		if (strlen(line) < ncount)
+   169540:  110-block  0
+        -:  111:		{
+    #####:  112:			line[cpre + 19 * i + 1] = '0';
+    %%%%%:  112-block  0
+        -:  113:		}
+        -:  114:		else
+        -:  115:		{
+   169540:  116:			substringEx(tmp, line + cpre + 19 * i, 0, 19);
+   169540:  116-block  0
+   169540:  117:			if (len_trim(tmp) == 0)
+        -:  118:			{
+     4496:  119:				line[cpre + 19 * i + 1] = '0';
+     4496:  119-block  0
+        -:  120:			}
+        -:  121:		}
+        -:  122:	}
+    42385:  123:}
+        -:  124:
+        9:  125:void fillobs(char *line, int nobs, int itemlen, double ver)
+        -:  126:{
+        9:  127:	int OFFSET = 0, len, i;
+        -:  128:	char tmp[256];
+        9:  129:	if (ver > 3.0)
+        9:  129-block  0
+        9:  130:		OFFSET = 3;
+        9:  130-block  0
+        9:  131:	len = len_trim(line);
+        9:  131-block  0
+      150:  132:	for (i = len; i < itemlen * nobs + OFFSET; i++)
+      150:  132-block  0
+      141:  133:		line[i] = ' ';
+      141:  133-block  0
+        9:  134:	line[itemlen * nobs + OFFSET] = '\0';
+      189:  135:	for (i = 0; i < nobs; i++)
+        9:  135-block  0
+      180:  135-block  1
+      189:  135-block  2
+        -:  136:	{
+      180:  137:		memset(tmp, 0, sizeof(char) * 256);
+      180:  138:		substringEx(tmp, line + OFFSET + i * itemlen, 0, itemlen - 2); // last is signal strength
+      180:  138-block  0
+      180:  139:		if (len_trim(tmp) == 0)
+        -:  140:		{
+       32:  141:			line[itemlen * i + OFFSET] = '0';
+       32:  141-block  0
+        -:  142:		}
+        -:  143:	}
+        9:  144:}
+        9:  145:void mjd2doy(int jd, int *iyear, int *idoy)
+        -:  146:{
+        9:  147:	*iyear = (jd + 678940) / 365;
+        9:  148:	*idoy = jd - modified_julday(*iyear, 1, 1);
+        9:  148-block  0
+       18:  149:	while (*idoy < 0)
+       18:  149-block  0
+        -:  150:	{
+        9:  151:		(*iyear)--;
+        9:  152:		*idoy = jd - modified_julday(*iyear, 1, 1) + 1;
+        9:  152-block  0
+        -:  153:	}
+        9:  154:}
+    #####:  155:char *left_justify_string(char *string)
+        -:  156:{
+    #####:  157:	int p = 0;
+    #####:  158:	while (*(string + p) == ' ' || *(string + p) == '\n' || *(string + p) == '\r')
+    %%%%%:  158-block  0
+    %%%%%:  158-block  1
+    %%%%%:  158-block  2
+    %%%%%:  158-block  3
+    #####:  159:		p++;
+    %%%%%:  159-block  0
+    #####:  160:	return string + p;
+    %%%%%:  160-block  0
+        -:  161:}
+     6776:  162:void yr2year(int *yr)
+        -:  163:{
+     6776:  164:	if (*yr > 1900)
+     6776:  164-block  0
+     6776:  165:		return;
+     6776:  165-block  0
+    #####:  166:	if (*yr <= 20)
+    %%%%%:  166-block  0
+    #####:  167:		*yr += 2000;
+    %%%%%:  167-block  0
+        -:  168:	else
+    #####:  169:		*yr += 1900;
+    %%%%%:  169-block  0
+        -:  170:}
+        -:  171:
+        9:  172:void mjd2date(int jd, double sod, int *iyear, int *imonth, int *iday, int *ih,
+        -:  173:			  int *imin, double *sec)
+        -:  174:{
+        9:  175:	int doy = 0;
+        9:  176:	mjd2doy(jd, iyear, &doy);
+        9:  176-block  0
+        9:  177:	yeardoy2monthday(*iyear, doy, imonth, iday);
+        -:  178:
+        9:  179:	*ih = (int)sod / 3600.0;
+        9:  180:	*imin = (int)((sod - (*ih) * 3600.0) / 60.0);
+        9:  181:	*sec = sod - (*ih) * 3600.0 - (*imin) * 60.0;
+        9:  182:}
+    #####:  183:void wksow2mjd(int week, double sow, int *mjd, double *sod)
+        -:  184:{
+    #####:  185:	if (mjd != NULL)
+    %%%%%:  185-block  0
+    #####:  186:		*mjd = (int)(sow / 86400.0) + week * 7 + 44244;
+    %%%%%:  186-block  0
+    #####:  187:	if (sod != NULL)
+    %%%%%:  187-block  0
+    #####:  188:		*sod = fmod(sow, 86400.0);
+    %%%%%:  188-block  0
+    #####:  189:}
+        -:  190:
+        9:  191:void yeardoy2monthday(int iyear, int idoy, int *imonth, int *iday)
+        -:  192:{
+        9:  193:	int days_in_month[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+        -:  194:	int id, i;
+       9*:  195:	if ((iyear % 4 == 0 && iyear % 100 != 0) || iyear % 400 == 0)
+        9:  195-block  0
+        9:  195-block  1
+    %%%%%:  195-block  2
+        9:  196:		days_in_month[1] = 29;
+        9:  196-block  0
+        9:  197:	id = idoy;
+       36:  198:	for (i = 0; i < 12; i++)
+        9:  198-block  0
+       36:  198-block  1
+        -:  199:	{
+       36:  200:		id = id - days_in_month[i];
+       36:  201:		if (id > 0)
+       36:  201-block  0
+       27:  202:			continue;
+       27:  202-block  0
+        9:  203:		*iday = id + days_in_month[i];
+        9:  204:		*imonth = i + 1;
+        9:  205:		break;
+        9:  205-block  0
+        -:  206:	}
+        9:  207:}
+        -:  208:
+        2:  209:double timdif(int jd2, double sod2, int jd1, double sod1)
+        -:  210:{
+        2:  211:	return 86400.0 * (jd2 - jd1) + sod2 - sod1;
+        2:  211-block  0
+        -:  212:}
+        -:  213:
+    #####:  214:void timinc(int jd, double sec, double delt, int *jd1, double *sec1)
+        -:  215:{
+    #####:  216:	*sec1 = sec + delt;
+    #####:  217:	int inc = (int)(*sec1 / 86400.0);
+    #####:  218:	*jd1 = jd + inc;
+    #####:  219:	*sec1 = *sec1 - inc * 86400.0;
+    #####:  220:	if (*sec1 >= 0)
+    %%%%%:  220-block  0
+    #####:  221:		return;
+    %%%%%:  221-block  0
+    #####:  222:	*jd1 = *jd1 - 1;
+    #####:  223:	*sec1 = *sec1 + 86400;
+    %%%%%:  223-block  0
+        -:  224:}
+        -:  225:
+     6795:  226:int modified_julday(int iyear, int imonth, int iday)
+        -:  227:{
+        -:  228:	int iyr, result;
+     6795:  229:	int doy_of_month[12] = {0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304,
+        -:  230:							334};
+     6795:  231:	if (iyear < 0 || imonth < 0 || iday < 0 || imonth > 12 || iday > 366 || (imonth != 0 && iday > 31))
+     6795:  231-block  0
+     6795:  231-block  1
+     6795:  231-block  2
+     6795:  231-block  3
+     6795:  231-block  4
+     6795:  231-block  5
+     6795:  231-block  6
+        -:  232:	{
+    #####:  233:		printf("***ERROR(modified_julday): incorrect arguments!%d %d %d\n",
+    %%%%%:  233-block  0
+        -:  234:			   iyear, imonth, iday);
+    #####:  235:		exit(1);
+        -:  236:	}
+     6795:  237:	iyr = iyear;
+     6795:  238:	if (imonth <= 2)
+     6795:  238-block  0
+       18:  239:		iyr -= 1;
+       18:  239-block  0
+     6795:  240:	result = 365 * iyear - 678941 + iyr / 4 - iyr / 100 + iyr / 400 + iday;
+        -:  241:
+     6795:  242:	if (imonth != 0)
+     6795:  242-block  0
+     6795:  243:		result = result + doy_of_month[imonth - 1];
+     6795:  243-block  0
+     6795:  244:	return result;
+     6795:  244-block  0
+        -:  245:}
+        -:  246:
+     1045:  247:void mjd2wksow(int mjd, double sod, int *week, double *sow)
+        -:  248:{
+     1045:  249:	*week = (int)((mjd + sod / 86400.0 - 44244.0) / 7.0);
+     1045:  250:	*sow = (mjd - 44244.0 - *week * 7) * 86400.0 + sod;
+     1045:  251:}

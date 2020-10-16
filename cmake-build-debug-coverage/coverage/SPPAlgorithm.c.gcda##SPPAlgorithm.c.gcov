@@ -1,0 +1,91 @@
+        -:    0:Source:/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c
+        -:    0:Graph:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/SPPAlgorithm.c.gcno
+        -:    0:Data:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/SPPAlgorithm.c.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by eureka on 2020/10/16.
+        -:    3://
+        -:    4:
+        -:    5:#include "SPPAlgorithm.h"
+        -:    6:
+        -:    7:
+        6:    8:int Adjust(double *B, double *P, double *l, int countSat, double *x, double tol) {
+        6:    9:    double *W = mat(4, 1); //BTPl
+        6:    9-block  0
+        6:   10:    double *N = mat(4, 4);
+        6:   11:    double *BT = mat(countSat, 4);
+        6:   12:    double *BTP = mat(4, countSat);
+        6:   13:    double *dx = mat(4, 1);
+        -:   14:    int status;
+        6:   15:    CMat_Copy(BT, B, countSat, 4);
+        6:   16:    CMat_Transpose(BT, countSat, 4);
+        6:   17:    CMat_Matmul("NN", 4, countSat, countSat, 1.0, BT, P, 0.0, BTP);
+        6:   18:    CMat_Matmul("NN", 4, 4, countSat, 1.0, BTP, B, 0.0, N);
+        6:   19:    CMat_Matmul("NN", 4, 1, countSat, 1.0, BTP, l, 0.0, W);
+        6:   20:    CMat_Inverse(N, 4, 4);
+        6:   21:    CMat_Matmul("NN", 4, 1, 4, 1.0, N, W, 0.0, dx);
+        -:   22:
+        6:   23:    Mat_Add(x, dx, 4, 1);
+        6:   24:    status = (Mat_Norm(dx, 4) < tol);
+        6:   25:    return status;
+        -:   26:}
+        -:   27:
+        1:   28:void SPP(Coord *sitPos, Coord *satPos, double *obs, double *corr, int countSat, double *elev) {
+        1:   29:    double *B = mat(countSat, 4);
+        1:   29-block  0
+        1:   30:    double *P = mat(countSat, countSat);
+        1:   31:    double *l = mat(countSat, 1);
+        -:   32:    double dZ, dY, dX, rho_0;
+        -:   33:    int i;
+        -:   34:    //initialize
+        1:   35:    double x[] = {sitPos->X, sitPos->Y, sitPos->Z, 0.0};
+       10:   36:    for (i = 0; i < countSat; i++) {
+        9:   36-block  0
+       10:   36-block  1
+        9:   37:        dX = x[0] - satPos[i].X;
+        9:   38:        dY = x[1] - satPos[i].Y;
+        9:   39:        dZ = x[2] - satPos[i].Z;
+        9:   40:        rho_0 = sqrt(dX * dX + dY * dY + dZ * dZ);
+        -:   41:
+        9:   42:        B[i + 0 * countSat] = dX / rho_0;
+        9:   43:        B[i + 1 * countSat] = dY / rho_0;
+        9:   44:        B[i + 2 * countSat] = dZ / rho_0;
+        9:   45:        B[i + 3 * countSat] = 1.0;
+        9:   46:        l[i] = obs[i] - (rho_0 + corr[i]) - x[3];
+        -:   47:
+        9:   48:        if (elev[i] < 30) //截止高度角, 低于此降权处理
+        9:   48-block  0
+        4:   49:            P[i + i * countSat] = 0.05 * (elev[i] - 10); //线性处理，简化运算
+        4:   49-block  0
+        -:   50:        else {
+        5:   51:            P[i + i * countSat] = 1;
+        5:   51-block  0
+        -:   52:        }
+        -:   53:    }
+        -:   54:
+        -:   55:    //Adjust and Update B,l
+        1:   56:    int isOver = Adjust(B, P, l, countSat, x, 1.0e-6);
+        1:   56-block  0
+        6:   57:    while (!isOver) {
+        6:   57-block  0
+       50:   58:        for (i = 0; i < countSat; i++) {
+        5:   58-block  0
+       50:   58-block  1
+       45:   59:            dX = x[0] - satPos[i].X;
+       45:   60:            dY = x[1] - satPos[i].Y;
+       45:   61:            dZ = x[2] - satPos[i].Z;
+       45:   62:            rho_0 = sqrt(dX * dX + dY * dY + dZ * dZ);
+        -:   63:
+       45:   64:            B[i + 0 * countSat] = dX / rho_0;
+       45:   65:            B[i + 1 * countSat] = dY / rho_0;
+       45:   66:            B[i + 2 * countSat] = dZ / rho_0;
+       45:   67:            l[i] = obs[i] - (rho_0 + corr[i]) - x[3];
+       45:   67-block  0
+        -:   68:        }
+        5:   69:        isOver = Adjust(B, P, l, countSat, x, 1.0e-8);
+        5:   69-block  0
+        -:   70:    }
+        1:   71:    sitPos->X = x[0];
+        1:   72:    sitPos->Y = x[1];
+        1:   73:    sitPos->Z = x[2];
+        1:   74:}

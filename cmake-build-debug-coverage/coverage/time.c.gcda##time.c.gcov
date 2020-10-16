@@ -1,0 +1,141 @@
+        -:    0:Source:/media/eureka/eureka/GNSS Algorithm/SPP/time.c
+        -:    0:Graph:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/time.c.gcno
+        -:    0:Data:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/time.c.gcda
+        -:    0:Runs:1
+        -:    1:#include "global.h"
+        -:    2:#include <math.h>
+        -:    3:/* convert calendar day/time to time -------------------------------------------
+        -:    4:* convert calendar day/time to gtime_t struct
+        -:    5:* args   : double *ep       I   day/time {year,month,day,hour,min,sec}
+        -:    6:* return : gtime_t struct
+        -:    7:* notes  : proper in 1970-2037 or 1970-2099 (64bit time_t)
+        -:    8:*-----------------------------------------------------------------------------*/
+       27:    9:gtime_t epoch2time(const double *ep)
+        -:   10:{
+       27:   11:    const int doy[]={1,32,60,91,121,152,182,213,244,274,305,335};
+       27:   12:    gtime_t time={0};
+       27:   13:    int days,sec,year=(int)ep[0],mon=(int)ep[1],day=(int)ep[2];
+        -:   14:    
+      27*:   15:    if (year<1970||2099<year||mon<1||12<mon) return time;
+       27:   15-block  0
+       27:   15-block  1
+       27:   15-block  2
+       27:   15-block  3
+    %%%%%:   15-block  4
+        -:   16:    
+        -:   17:    /* leap year if year%4==0 in 1901-2099 */
+       27:   18:    days=(year-1970)*365+(year-1969)/4+doy[mon-1]+day-2+(year%4==0&&mon>=3?1:0);
+       27:   18-block  0
+       27:   18-block  1
+        9:   18-block  2
+       18:   18-block  3
+       27:   19:    sec=(int)floor(ep[5]);
+       27:   20:    time.time=(time_t)days*86400+(int)ep[3]*3600+(int)ep[4]*60+sec;
+       27:   21:    time.sec=ep[5]-sec;
+       27:   22:    return time;
+       27:   22-block  0
+        -:   23:}
+        -:   24:/* time to calendar day/time ---------------------------------------------------
+        -:   25:* convert gtime_t struct to calendar day/time
+        -:   26:* args   : gtime_t t        I   gtime_t struct
+        -:   27:*          double *ep       O   day/time {year,month,day,hour,min,sec}
+        -:   28:* return : none
+        -:   29:* notes  : proper in 1970-2037 or 1970-2099 (64bit time_t)
+        -:   30:*-----------------------------------------------------------------------------*/
+    #####:   31:extern void time2epoch(gtime_t t, double *ep)
+        -:   32:{
+    #####:   33:    const int mday[]={ /* # of days in a month */
+        -:   34:        31,28,31,30,31,30,31,31,30,31,30,31,31,28,31,30,31,30,31,31,30,31,30,31,
+        -:   35:        31,29,31,30,31,30,31,31,30,31,30,31,31,28,31,30,31,30,31,31,30,31,30,31
+        -:   36:    };
+        -:   37:    int days,sec,mon,day;
+        -:   38:    
+        -:   39:    /* leap year if year%4==0 in 1901-2099 */
+    #####:   40:    days=(int)(t.time/86400);
+    #####:   41:    sec=(int)(t.time-(time_t)days*86400);
+    #####:   42:    for (day=days%1461,mon=0;mon<48;mon++) {
+    %%%%%:   42-block  0
+    %%%%%:   42-block  1
+    %%%%%:   42-block  2
+    #####:   43:        if (day>=mday[mon]) day-=mday[mon]; else break;
+    %%%%%:   43-block  0
+    %%%%%:   43-block  1
+    %%%%%:   43-block  2
+        -:   44:    }
+    #####:   45:    ep[0]=1970+days/1461*4+mon/12; ep[1]=mon%12+1; ep[2]=day+1;
+    #####:   46:    ep[3]=sec/3600; ep[4]=sec%3600/60; ep[5]=sec%60+t.sec;
+    #####:   47:}
+        -:   48:/* gps time to time ------------------------------------------------------------
+        -:   49:* convert week and tow in gps time to gtime_t struct
+        -:   50:* args   : int    week      I   week number in gps time
+        -:   51:*          double sec       I   time of week in gps time (s)
+        -:   52:* return : gtime_t struct
+        -:   53:*-----------------------------------------------------------------------------*/
+    #####:   54:gtime_t gpst2time(int week, double sec)
+        -:   55:{
+    #####:   56:    gtime_t t=epoch2time(gpst0);
+    %%%%%:   56-block  0
+        -:   57:    
+    #####:   58:    if (sec<-1E9||1E9<sec) sec=0.0;
+    %%%%%:   58-block  0
+    %%%%%:   58-block  1
+    #####:   59:    t.time+=(time_t)86400*7*week+(int)sec;
+    #####:   60:    t.sec=sec-(int)sec;
+    #####:   61:    return t;
+    %%%%%:   61-block  0
+        -:   62:}
+        -:   63:/* time to gps time ------------------------------------------------------------
+        -:   64:* convert gtime_t struct to week and tow in gps time
+        -:   65:* args   : gtime_t t        I   gtime_t struct
+        -:   66:*          int    *week     IO  week number in gps time (NULL: no output)
+        -:   67:* return : time of week in gps time (s)
+        -:   68:*-----------------------------------------------------------------------------*/
+       18:   69:double time2gpst(gtime_t t, int *week)
+        -:   70:{
+       18:   71:    gtime_t t0=epoch2time(gpst0);
+       18:   71-block  0
+       18:   72:    time_t sec=t.time-t0.time;
+       18:   73:    int w=(int)(sec/(86400*7));
+        -:   74:    
+       18:   75:    if (week) *week=w;
+       18:   75-block  0
+       18:   76:    return (double)(sec-(double)w*86400*7)+t.sec;
+       18:   76-block  0
+        -:   77:}
+        -:   78:/* galileo system time to time -------------------------------------------------
+        -:   79:* convert week and tow in galileo system time (gst) to gtime_t struct
+        -:   80:* args   : int    week      I   week number in gst
+        -:   81:*          double sec       I   time of week in gst (s)
+        -:   82:* return : gtime_t struct
+        -:   83:*-----------------------------------------------------------------------------*/
+    #####:   84:extern gtime_t gst2time(int week, double sec)
+        -:   85:{
+    #####:   86:    gtime_t t=epoch2time(gst0);
+    %%%%%:   86-block  0
+        -:   87:    
+    #####:   88:    if (sec<-1E9||1E9<sec) sec=0.0;
+    %%%%%:   88-block  0
+    %%%%%:   88-block  1
+    #####:   89:    t.time+=(time_t)86400*7*week+(int)sec;
+    #####:   90:    t.sec=sec-(int)sec;
+    #####:   91:    return t;
+    %%%%%:   91-block  0
+        -:   92:}
+        -:   93:/* time to galileo system time -------------------------------------------------
+        -:   94:* convert gtime_t struct to week and tow in galileo system time (gst)
+        -:   95:* args   : gtime_t t        I   gtime_t struct
+        -:   96:*          int    *week     IO  week number in gst (NULL: no output)
+        -:   97:* return : time of week in gst (s)
+        -:   98:*-----------------------------------------------------------------------------*/
+    #####:   99:extern double time2gst(gtime_t t, int *week)
+        -:  100:{
+    #####:  101:    gtime_t t0=epoch2time(gst0);
+    %%%%%:  101-block  0
+    #####:  102:    time_t sec=t.time-t0.time;
+    #####:  103:    int w=(int)(sec/(86400*7));
+        -:  104:    
+    #####:  105:    if (week) *week=w;
+    %%%%%:  105-block  0
+    #####:  106:    return (double)(sec-(double)w*86400*7)+t.sec;
+    %%%%%:  106-block  0
+        -:  107:}

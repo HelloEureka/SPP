@@ -77,162 +77,162 @@ include CMakeFiles/SPP.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/SPP.dir/flags.make
 
-CMakeFiles/SPP.dir/CMat.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/CMat.c.o: ../CMat.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/SPP.dir/CMat.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/CMat.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/CMat.c"
+CMakeFiles/SPP.dir/src/CMat.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/CMat.c.o: ../src/CMat.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/SPP.dir/src/CMat.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/CMat.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/CMat.c"
 
-CMakeFiles/SPP.dir/CMat.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/CMat.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/CMat.c" > CMakeFiles/SPP.dir/CMat.c.i
+CMakeFiles/SPP.dir/src/CMat.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/CMat.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/CMat.c" > CMakeFiles/SPP.dir/src/CMat.c.i
 
-CMakeFiles/SPP.dir/CMat.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/CMat.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/CMat.c" -o CMakeFiles/SPP.dir/CMat.c.s
+CMakeFiles/SPP.dir/src/CMat.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/CMat.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/CMat.c" -o CMakeFiles/SPP.dir/src/CMat.c.s
 
-CMakeFiles/SPP.dir/SPPAlgorithm.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/SPPAlgorithm.c.o: ../SPPAlgorithm.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/SPP.dir/SPPAlgorithm.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/SPPAlgorithm.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c"
+CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o: ../src/SPPAlgorithm.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/SPPAlgorithm.c"
 
-CMakeFiles/SPP.dir/SPPAlgorithm.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/SPPAlgorithm.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c" > CMakeFiles/SPP.dir/SPPAlgorithm.c.i
+CMakeFiles/SPP.dir/src/SPPAlgorithm.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/SPPAlgorithm.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/SPPAlgorithm.c" > CMakeFiles/SPP.dir/src/SPPAlgorithm.c.i
 
-CMakeFiles/SPP.dir/SPPAlgorithm.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/SPPAlgorithm.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c" -o CMakeFiles/SPP.dir/SPPAlgorithm.c.s
+CMakeFiles/SPP.dir/src/SPPAlgorithm.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/SPPAlgorithm.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/SPPAlgorithm.c" -o CMakeFiles/SPP.dir/src/SPPAlgorithm.c.s
 
-CMakeFiles/SPP.dir/SatPos.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/SatPos.c.o: ../SatPos.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SPP.dir/SatPos.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/SatPos.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.c"
+CMakeFiles/SPP.dir/src/SatPos.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/SatPos.c.o: ../src/SatPos.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/SPP.dir/src/SatPos.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/SatPos.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/SatPos.c"
 
-CMakeFiles/SPP.dir/SatPos.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/SatPos.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.c" > CMakeFiles/SPP.dir/SatPos.c.i
+CMakeFiles/SPP.dir/src/SatPos.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/SatPos.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/SatPos.c" > CMakeFiles/SPP.dir/src/SatPos.c.i
 
-CMakeFiles/SPP.dir/SatPos.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/SatPos.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.c" -o CMakeFiles/SPP.dir/SatPos.c.s
+CMakeFiles/SPP.dir/src/SatPos.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/SatPos.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/SatPos.c" -o CMakeFiles/SPP.dir/src/SatPos.c.s
 
-CMakeFiles/SPP.dir/azel.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/azel.c.o: ../azel.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SPP.dir/azel.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/azel.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/azel.c"
+CMakeFiles/SPP.dir/src/azel.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/azel.c.o: ../src/azel.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/SPP.dir/src/azel.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/azel.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/azel.c"
 
-CMakeFiles/SPP.dir/azel.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/azel.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/azel.c" > CMakeFiles/SPP.dir/azel.c.i
+CMakeFiles/SPP.dir/src/azel.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/azel.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/azel.c" > CMakeFiles/SPP.dir/src/azel.c.i
 
-CMakeFiles/SPP.dir/azel.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/azel.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/azel.c" -o CMakeFiles/SPP.dir/azel.c.s
+CMakeFiles/SPP.dir/src/azel.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/azel.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/azel.c" -o CMakeFiles/SPP.dir/src/azel.c.s
 
-CMakeFiles/SPP.dir/com.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/com.c.o: ../com.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/SPP.dir/com.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/com.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/com.c"
+CMakeFiles/SPP.dir/src/com.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/com.c.o: ../src/com.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/SPP.dir/src/com.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/com.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/com.c"
 
-CMakeFiles/SPP.dir/com.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/com.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/com.c" > CMakeFiles/SPP.dir/com.c.i
+CMakeFiles/SPP.dir/src/com.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/com.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/com.c" > CMakeFiles/SPP.dir/src/com.c.i
 
-CMakeFiles/SPP.dir/com.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/com.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/com.c" -o CMakeFiles/SPP.dir/com.c.s
+CMakeFiles/SPP.dir/src/com.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/com.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/com.c" -o CMakeFiles/SPP.dir/src/com.c.s
 
-CMakeFiles/SPP.dir/iono.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/iono.c.o: ../iono.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/SPP.dir/iono.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/iono.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/iono.c"
+CMakeFiles/SPP.dir/src/iono.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/iono.c.o: ../src/iono.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building C object CMakeFiles/SPP.dir/src/iono.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/iono.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/iono.c"
 
-CMakeFiles/SPP.dir/iono.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/iono.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/iono.c" > CMakeFiles/SPP.dir/iono.c.i
+CMakeFiles/SPP.dir/src/iono.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/iono.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/iono.c" > CMakeFiles/SPP.dir/src/iono.c.i
 
-CMakeFiles/SPP.dir/iono.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/iono.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/iono.c" -o CMakeFiles/SPP.dir/iono.c.s
+CMakeFiles/SPP.dir/src/iono.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/iono.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/iono.c" -o CMakeFiles/SPP.dir/src/iono.c.s
 
-CMakeFiles/SPP.dir/main.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/SPP.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/main.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/main.c"
+CMakeFiles/SPP.dir/src/main.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/main.c.o: ../src/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building C object CMakeFiles/SPP.dir/src/main.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/main.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/main.c"
 
-CMakeFiles/SPP.dir/main.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/main.c" > CMakeFiles/SPP.dir/main.c.i
+CMakeFiles/SPP.dir/src/main.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/main.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/main.c" > CMakeFiles/SPP.dir/src/main.c.i
 
-CMakeFiles/SPP.dir/main.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/main.c" -o CMakeFiles/SPP.dir/main.c.s
+CMakeFiles/SPP.dir/src/main.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/main.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/main.c" -o CMakeFiles/SPP.dir/src/main.c.s
 
-CMakeFiles/SPP.dir/rnx.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/rnx.c.o: ../rnx.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/SPP.dir/rnx.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/rnx.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/rnx.c"
+CMakeFiles/SPP.dir/src/rnx.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/rnx.c.o: ../src/rnx.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building C object CMakeFiles/SPP.dir/src/rnx.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/rnx.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/rnx.c"
 
-CMakeFiles/SPP.dir/rnx.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/rnx.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/rnx.c" > CMakeFiles/SPP.dir/rnx.c.i
+CMakeFiles/SPP.dir/src/rnx.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/rnx.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/rnx.c" > CMakeFiles/SPP.dir/src/rnx.c.i
 
-CMakeFiles/SPP.dir/rnx.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/rnx.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/rnx.c" -o CMakeFiles/SPP.dir/rnx.c.s
+CMakeFiles/SPP.dir/src/rnx.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/rnx.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/rnx.c" -o CMakeFiles/SPP.dir/src/rnx.c.s
 
-CMakeFiles/SPP.dir/time.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/time.c.o: ../time.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/SPP.dir/time.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/time.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/time.c"
+CMakeFiles/SPP.dir/src/time.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/time.c.o: ../src/time.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building C object CMakeFiles/SPP.dir/src/time.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/time.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/time.c"
 
-CMakeFiles/SPP.dir/time.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/time.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/time.c" > CMakeFiles/SPP.dir/time.c.i
+CMakeFiles/SPP.dir/src/time.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/time.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/time.c" > CMakeFiles/SPP.dir/src/time.c.i
 
-CMakeFiles/SPP.dir/time.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/time.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/time.c" -o CMakeFiles/SPP.dir/time.c.s
+CMakeFiles/SPP.dir/src/time.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/time.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/time.c" -o CMakeFiles/SPP.dir/src/time.c.s
 
-CMakeFiles/SPP.dir/trop.c.o: CMakeFiles/SPP.dir/flags.make
-CMakeFiles/SPP.dir/trop.c.o: ../trop.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/SPP.dir/trop.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/trop.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/trop.c"
+CMakeFiles/SPP.dir/src/trop.c.o: CMakeFiles/SPP.dir/flags.make
+CMakeFiles/SPP.dir/src/trop.c.o: ../src/trop.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building C object CMakeFiles/SPP.dir/src/trop.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/SPP.dir/src/trop.c.o   -c "/media/eureka/eureka/GNSS Algorithm/SPP/src/trop.c"
 
-CMakeFiles/SPP.dir/trop.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/trop.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/trop.c" > CMakeFiles/SPP.dir/trop.c.i
+CMakeFiles/SPP.dir/src/trop.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/SPP.dir/src/trop.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E "/media/eureka/eureka/GNSS Algorithm/SPP/src/trop.c" > CMakeFiles/SPP.dir/src/trop.c.i
 
-CMakeFiles/SPP.dir/trop.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/trop.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/trop.c" -o CMakeFiles/SPP.dir/trop.c.s
+CMakeFiles/SPP.dir/src/trop.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/SPP.dir/src/trop.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S "/media/eureka/eureka/GNSS Algorithm/SPP/src/trop.c" -o CMakeFiles/SPP.dir/src/trop.c.s
 
 # Object files for target SPP
 SPP_OBJECTS = \
-"CMakeFiles/SPP.dir/CMat.c.o" \
-"CMakeFiles/SPP.dir/SPPAlgorithm.c.o" \
-"CMakeFiles/SPP.dir/SatPos.c.o" \
-"CMakeFiles/SPP.dir/azel.c.o" \
-"CMakeFiles/SPP.dir/com.c.o" \
-"CMakeFiles/SPP.dir/iono.c.o" \
-"CMakeFiles/SPP.dir/main.c.o" \
-"CMakeFiles/SPP.dir/rnx.c.o" \
-"CMakeFiles/SPP.dir/time.c.o" \
-"CMakeFiles/SPP.dir/trop.c.o"
+"CMakeFiles/SPP.dir/src/CMat.c.o" \
+"CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o" \
+"CMakeFiles/SPP.dir/src/SatPos.c.o" \
+"CMakeFiles/SPP.dir/src/azel.c.o" \
+"CMakeFiles/SPP.dir/src/com.c.o" \
+"CMakeFiles/SPP.dir/src/iono.c.o" \
+"CMakeFiles/SPP.dir/src/main.c.o" \
+"CMakeFiles/SPP.dir/src/rnx.c.o" \
+"CMakeFiles/SPP.dir/src/time.c.o" \
+"CMakeFiles/SPP.dir/src/trop.c.o"
 
 # External object files for target SPP
 SPP_EXTERNAL_OBJECTS =
 
-SPP: CMakeFiles/SPP.dir/CMat.c.o
-SPP: CMakeFiles/SPP.dir/SPPAlgorithm.c.o
-SPP: CMakeFiles/SPP.dir/SatPos.c.o
-SPP: CMakeFiles/SPP.dir/azel.c.o
-SPP: CMakeFiles/SPP.dir/com.c.o
-SPP: CMakeFiles/SPP.dir/iono.c.o
-SPP: CMakeFiles/SPP.dir/main.c.o
-SPP: CMakeFiles/SPP.dir/rnx.c.o
-SPP: CMakeFiles/SPP.dir/time.c.o
-SPP: CMakeFiles/SPP.dir/trop.c.o
+SPP: CMakeFiles/SPP.dir/src/CMat.c.o
+SPP: CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o
+SPP: CMakeFiles/SPP.dir/src/SatPos.c.o
+SPP: CMakeFiles/SPP.dir/src/azel.c.o
+SPP: CMakeFiles/SPP.dir/src/com.c.o
+SPP: CMakeFiles/SPP.dir/src/iono.c.o
+SPP: CMakeFiles/SPP.dir/src/main.c.o
+SPP: CMakeFiles/SPP.dir/src/rnx.c.o
+SPP: CMakeFiles/SPP.dir/src/time.c.o
+SPP: CMakeFiles/SPP.dir/src/trop.c.o
 SPP: CMakeFiles/SPP.dir/build.make
 SPP: CMakeFiles/SPP.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_11) "Linking C executable SPP"

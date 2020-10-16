@@ -1,0 +1,165 @@
+        -:    0:Source:/media/eureka/eureka/GNSS Algorithm/SPP/main.c
+        -:    0:Graph:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/main.c.gcno
+        -:    0:Data:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/main.c.gcda
+        -:    0:Runs:1
+        -:    1:/*
+        -:    2: * main.cpp
+        -:    3: *
+        -:    4: *  Created on: 2020年9月20日
+        -:    5: *      Author: xps
+        -:    6: */
+        -:    7:#include <stdio.h>
+        -:    8:#include <stdlib.h>
+        -:    9:#include <string.h>
+        -:   10:
+        -:   11:#define GLOBAL_VAR
+        -:   12:
+        -:   13:#include "rnx.h"
+        -:   14:#include "global.h"
+        -:   15:
+        -:   16:#include "SPPAlgorithm.h"
+        -:   17:
+        1:   18:void initialize() {
+        -:   19:    int isat, isys;
+        1:   20:    memset(&CKF, 0, sizeof(CKDCFG));
+        1:   21:    strcpy(SYS, "GCRESJI");
+        1:   22:    strcpy(OBSTYPE, "PWCIXSAQLDBYMZN ");
+        -:   23:    // initialize the cprn
+       33:   24:    for (isat = 0; isat < 32; isat++) {
+        1:   24-block  0
+       33:   24-block  1
+       32:   25:        sprintf(CKF.cprn[isat], "G%02d", isat + 1);
+       32:   25-block  0
+        -:   26:    }
+        1:   27:    CKF.nprn = 32;
+        8:   28:    for (isys = 0; isys < MAXSYS; isys++) {
+        1:   28-block  0
+        7:   28-block  1
+        8:   28-block  2
+        7:   29:        switch (SYS[isys]) {
+        7:   29-block  0
+        1:   30:            case 'G':
+        1:   31:                strcpy(CKF.freq[isys][0], "L1");
+        1:   32:                strcpy(CKF.freq[isys][1], "L2");
+        1:   33:                CKF.nfreq[isys] = 2;
+        1:   34:                break;
+        1:   34-block  0
+        6:   35:            default:
+        6:   36:                break;
+        6:   36-block  0
+        -:   37:        }
+        -:   38:    }
+        1:   39:    strcpy(CKF.cobs, "SF");
+        1:   40:}
+        -:   41:
+        -:   42:
+        1:   43:void GetData(RNXOBS *OB, int *obsCountAva, Coord *satPos, Coord *groundRef, double t, double *obs_c1w, double *corr,
+        -:   44:             double *elev) {
+        1:   45:    int counter = 0; //加快循环, 使得循环一次 MAXEPH
+      151:   46:    for (int k = 0; k < MAXSAT; k++) {
+        1:   46-block  0
+      150:   46-block  1
+      151:   46-block  2
+      150:   47:        double c1w = OB->obs[k][3];
+      150:   48:        double c2w = OB->obs[k][4];
+      150:   49:        if (fabs(c1w) > 1e-3) {
+      150:   49-block  0
+        9:   50:            double toe = 99999999999999999999.0;
+        9:   51:            double dt = fabs(t - toe);
+      367:   52:            for (int i = counter; i < MAXEPH; i++) {
+        9:   52-block  0
+      358:   52-block  1
+      367:   52-block  2
+        -:   53:                // 寻找最近参考时刻
+      367:   54:                if (!strcmp(ephgps[0][i].cprn, OB->cprn[k])) {
+      367:   54-block  0
+       18:   55:                    if (fabs(t - ephgps[0][i].toe) < dt) {
+       18:   55-block  0
+        9:   56:                        toe = ephgps[0][i].toe;
+        9:   57:                        dt = fabs(t - toe);
+        9:   57-block  0
+        -:   58:                    } else //假定星历按时间顺序排列, 最佳时间差值为最小, 此前时间差值一直递减, 一旦不再出现递减, 则上次循环为最佳参考历元
+        -:   59:                    {
+        9:   60:                        satPos[*obsCountAva] = SatPos_CorrSpread(&ephgps[0][i - 1], groundRef, t);
+        9:   60-block  0
+        9:   61:                        double t_spread = Dist(&satPos[*obsCountAva], groundRef) / CLIGHT; //传播时间修正
+        9:   62:                        Coord satVel = SatVel(&ephgps[0][i - 1], t - t_spread); //
+        -:   63:
+        9:   64:                        double satClk = SatClk(&ephgps[0][i - 1], t - t_spread);
+        9:   65:                        double earthRot_corr = SatPos_CorrEarthRot(&satPos[*obsCountAva], groundRef);
+        9:   66:                        double relative_corr = SatPos_CorrRelative(&satPos[*obsCountAva], &satVel);
+        -:   67:                        double azel[2];
+        9:   68:                        elevazel(&satPos[*obsCountAva], groundRef, azel);
+        -:   69:
+        -:   70:                        double pos[3];
+        9:   71:                        ecef2pos(groundRef, pos);
+        9:   72:                        double ionPara[] = {0.9313e-08, 0.1490e-07, -0.5960e-07, -0.1192e-06,
+        -:   73:                                            0.8806e+05, 0.4915e+05, -0.1311e+06, -0.3277e+06};
+        -:   74:                        int iyear, imonth, iday, ih, imin;
+        -:   75:                        double sec;
+        9:   76:                        mjd2date(OB->jd, OB->tsec, &iyear, &imonth, &iday, &ih, &imin, &sec);
+        9:   77:                        double ep[] = {iyear, imonth, iday, ih, imin, sec};
+        9:   78:                        gtime_t gtime = epoch2time(&ep);
+        9:   79:                        double ion = ionmodel(gtime, ionPara, &pos, &azel);
+        9:   80:                        double trp = tropmodel(gtime, &pos, &azel, 0.5);
+        9:   81:                        double tgd = 0;
+        -:   82:
+        9:   83:                        obs_c1w[*obsCountAva] = c1w;
+        9:   84:                        corr[*obsCountAva] = -satClk + trp + ion + earthRot_corr + relative_corr + tgd;
+        9:   85:                        elev[*obsCountAva] = azel[1] * RAD2DEG;
+        9:   86:                        (*obsCountAva)++;
+        9:   87:                        counter = i;
+        9:   88:                        break;
+        -:   89:                    }
+        -:   90:                }
+        -:   91:            }
+        -:   92:        }
+        -:   93:    }
+        1:   94:}
+        -:   95:
+        -:   96:
+        1:   97:int main(int argc, char *args[]) {
+        1:   98:    RNXHEAD HD = {0};
+        1:   99:    RNXOBS OB = {0};
+        -:  100:    BRDHEAD brdhd;
+        1:  101:    initialize();
+        1:  101-block  0
+        -:  102:
+        1:  103:    CKF.mjd = (int) modified_julday(2020, 4, 22); /* the date should be set properly */
+        1:  104:    CKF.sod = 30.0;
+        1:  105:    const char *pfilobs = "../data/albh1130.20o";
+        1:  106:    const char *pfilbrdm = "../data/brdm1130.20p";
+        1:  107:    FILE *fp = fopen(pfilobs, "r");
+        1:  108:    if (!fp) {
+    #####:  109:        printf("can't open file to read!\n");
+    %%%%%:  109-block  0
+    #####:  110:        exit(1);
+        -:  111:    }
+        1:  112:    read_rnxobs_head(&HD, fp);
+        1:  112-block  0
+        1:  113:    read_rnxobs(fp, CKF.mjd, CKF.sod, CKF.nprn, CKF.cprn, CKF.nfreq, CKF.freq, &HD, &OB);
+        1:  114:    read_rnxnav('M', pfilbrdm, CKF.mjd, CKF.mjd + 1, &brdhd, neph, ephgps, ephgls);
+        1:  115:    fclose(fp);
+        -:  116:
+        -:  117:
+        1:  118:    Coord groundRef = {-2341333.112, -3539049.520, 4745791.248};
+        -:  119:
+        1:  120:    int obsCountAva = 0;
+        1:  121:    const int OBSCOUNTMAX = 40;  //
+        1:  122:    Coord satPos[OBSCOUNTMAX];  //
+        1:  123:    double corr[OBSCOUNTMAX];
+        1:  124:    Coord sitPos = {0, 0, 0};
+        1:  125:    double obs_c1w[OBSCOUNTMAX];
+        1:  126:    double elev[OBSCOUNTMAX];
+        -:  127:
+        1:  128:    double t = 3 * 24 * 3600 + 30;
+        -:  129:    int week;
+        -:  130:    double sow;
+        1:  131:    mjd2wksow(CKF.mjd, CKF.sod, &week, &sow);
+        1:  132:    GetData(&OB, &obsCountAva, &satPos, &groundRef, sow, &obs_c1w, &corr, &elev);
+        1:  133:    SPP(&sitPos, &satPos, &obs_c1w, &corr, obsCountAva, &elev);
+        -:  134:
+        1:  135:    printf("%10.3f  %10.3f  %10.3f\n", sitPos.X, sitPos.Y, sitPos.Z);
+        1:  136:    printf("process done!\n");
+        -:  137:}
+        -:  138:

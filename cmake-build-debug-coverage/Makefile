@@ -143,275 +143,275 @@ SPP/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/build
 .PHONY : SPP/fast
 
-CMat.o: CMat.c.o
+src/CMat.o: src/CMat.c.o
 
-.PHONY : CMat.o
-
-# target to build an object file
-CMat.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/CMat.c.o
-.PHONY : CMat.c.o
-
-CMat.i: CMat.c.i
-
-.PHONY : CMat.i
-
-# target to preprocess a source file
-CMat.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/CMat.c.i
-.PHONY : CMat.c.i
-
-CMat.s: CMat.c.s
-
-.PHONY : CMat.s
-
-# target to generate assembly for a file
-CMat.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/CMat.c.s
-.PHONY : CMat.c.s
-
-SPPAlgorithm.o: SPPAlgorithm.c.o
-
-.PHONY : SPPAlgorithm.o
+.PHONY : src/CMat.o
 
 # target to build an object file
-SPPAlgorithm.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SPPAlgorithm.c.o
-.PHONY : SPPAlgorithm.c.o
+src/CMat.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/CMat.c.o
+.PHONY : src/CMat.c.o
 
-SPPAlgorithm.i: SPPAlgorithm.c.i
+src/CMat.i: src/CMat.c.i
 
-.PHONY : SPPAlgorithm.i
+.PHONY : src/CMat.i
 
 # target to preprocess a source file
-SPPAlgorithm.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SPPAlgorithm.c.i
-.PHONY : SPPAlgorithm.c.i
+src/CMat.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/CMat.c.i
+.PHONY : src/CMat.c.i
 
-SPPAlgorithm.s: SPPAlgorithm.c.s
+src/CMat.s: src/CMat.c.s
 
-.PHONY : SPPAlgorithm.s
+.PHONY : src/CMat.s
 
 # target to generate assembly for a file
-SPPAlgorithm.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SPPAlgorithm.c.s
-.PHONY : SPPAlgorithm.c.s
+src/CMat.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/CMat.c.s
+.PHONY : src/CMat.c.s
 
-SatPos.o: SatPos.c.o
+src/SPPAlgorithm.o: src/SPPAlgorithm.c.o
 
-.PHONY : SatPos.o
+.PHONY : src/SPPAlgorithm.o
 
 # target to build an object file
-SatPos.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SatPos.c.o
-.PHONY : SatPos.c.o
+src/SPPAlgorithm.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/SPPAlgorithm.c.o
+.PHONY : src/SPPAlgorithm.c.o
 
-SatPos.i: SatPos.c.i
+src/SPPAlgorithm.i: src/SPPAlgorithm.c.i
 
-.PHONY : SatPos.i
+.PHONY : src/SPPAlgorithm.i
 
 # target to preprocess a source file
-SatPos.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SatPos.c.i
-.PHONY : SatPos.c.i
+src/SPPAlgorithm.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/SPPAlgorithm.c.i
+.PHONY : src/SPPAlgorithm.c.i
 
-SatPos.s: SatPos.c.s
+src/SPPAlgorithm.s: src/SPPAlgorithm.c.s
 
-.PHONY : SatPos.s
+.PHONY : src/SPPAlgorithm.s
 
 # target to generate assembly for a file
-SatPos.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SatPos.c.s
-.PHONY : SatPos.c.s
+src/SPPAlgorithm.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/SPPAlgorithm.c.s
+.PHONY : src/SPPAlgorithm.c.s
 
-azel.o: azel.c.o
+src/SatPos.o: src/SatPos.c.o
 
-.PHONY : azel.o
+.PHONY : src/SatPos.o
 
 # target to build an object file
-azel.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/azel.c.o
-.PHONY : azel.c.o
+src/SatPos.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/SatPos.c.o
+.PHONY : src/SatPos.c.o
 
-azel.i: azel.c.i
+src/SatPos.i: src/SatPos.c.i
 
-.PHONY : azel.i
+.PHONY : src/SatPos.i
 
 # target to preprocess a source file
-azel.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/azel.c.i
-.PHONY : azel.c.i
+src/SatPos.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/SatPos.c.i
+.PHONY : src/SatPos.c.i
 
-azel.s: azel.c.s
+src/SatPos.s: src/SatPos.c.s
 
-.PHONY : azel.s
+.PHONY : src/SatPos.s
 
 # target to generate assembly for a file
-azel.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/azel.c.s
-.PHONY : azel.c.s
+src/SatPos.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/SatPos.c.s
+.PHONY : src/SatPos.c.s
 
-com.o: com.c.o
+src/azel.o: src/azel.c.o
 
-.PHONY : com.o
+.PHONY : src/azel.o
 
 # target to build an object file
-com.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/com.c.o
-.PHONY : com.c.o
+src/azel.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/azel.c.o
+.PHONY : src/azel.c.o
 
-com.i: com.c.i
+src/azel.i: src/azel.c.i
 
-.PHONY : com.i
+.PHONY : src/azel.i
 
 # target to preprocess a source file
-com.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/com.c.i
-.PHONY : com.c.i
+src/azel.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/azel.c.i
+.PHONY : src/azel.c.i
 
-com.s: com.c.s
+src/azel.s: src/azel.c.s
 
-.PHONY : com.s
+.PHONY : src/azel.s
 
 # target to generate assembly for a file
-com.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/com.c.s
-.PHONY : com.c.s
+src/azel.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/azel.c.s
+.PHONY : src/azel.c.s
 
-iono.o: iono.c.o
+src/com.o: src/com.c.o
 
-.PHONY : iono.o
+.PHONY : src/com.o
 
 # target to build an object file
-iono.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/iono.c.o
-.PHONY : iono.c.o
+src/com.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/com.c.o
+.PHONY : src/com.c.o
 
-iono.i: iono.c.i
+src/com.i: src/com.c.i
 
-.PHONY : iono.i
+.PHONY : src/com.i
 
 # target to preprocess a source file
-iono.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/iono.c.i
-.PHONY : iono.c.i
+src/com.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/com.c.i
+.PHONY : src/com.c.i
 
-iono.s: iono.c.s
+src/com.s: src/com.c.s
 
-.PHONY : iono.s
+.PHONY : src/com.s
 
 # target to generate assembly for a file
-iono.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/iono.c.s
-.PHONY : iono.c.s
+src/com.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/com.c.s
+.PHONY : src/com.c.s
 
-main.o: main.c.o
+src/iono.o: src/iono.c.o
 
-.PHONY : main.o
+.PHONY : src/iono.o
 
 # target to build an object file
-main.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/main.c.o
-.PHONY : main.c.o
+src/iono.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/iono.c.o
+.PHONY : src/iono.c.o
 
-main.i: main.c.i
+src/iono.i: src/iono.c.i
 
-.PHONY : main.i
+.PHONY : src/iono.i
 
 # target to preprocess a source file
-main.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/main.c.i
-.PHONY : main.c.i
+src/iono.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/iono.c.i
+.PHONY : src/iono.c.i
 
-main.s: main.c.s
+src/iono.s: src/iono.c.s
 
-.PHONY : main.s
+.PHONY : src/iono.s
 
 # target to generate assembly for a file
-main.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/main.c.s
-.PHONY : main.c.s
+src/iono.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/iono.c.s
+.PHONY : src/iono.c.s
 
-rnx.o: rnx.c.o
+src/main.o: src/main.c.o
 
-.PHONY : rnx.o
+.PHONY : src/main.o
 
 # target to build an object file
-rnx.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/rnx.c.o
-.PHONY : rnx.c.o
+src/main.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/main.c.o
+.PHONY : src/main.c.o
 
-rnx.i: rnx.c.i
+src/main.i: src/main.c.i
 
-.PHONY : rnx.i
+.PHONY : src/main.i
 
 # target to preprocess a source file
-rnx.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/rnx.c.i
-.PHONY : rnx.c.i
+src/main.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/main.c.i
+.PHONY : src/main.c.i
 
-rnx.s: rnx.c.s
+src/main.s: src/main.c.s
 
-.PHONY : rnx.s
+.PHONY : src/main.s
 
 # target to generate assembly for a file
-rnx.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/rnx.c.s
-.PHONY : rnx.c.s
+src/main.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/main.c.s
+.PHONY : src/main.c.s
 
-time.o: time.c.o
+src/rnx.o: src/rnx.c.o
 
-.PHONY : time.o
+.PHONY : src/rnx.o
 
 # target to build an object file
-time.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/time.c.o
-.PHONY : time.c.o
+src/rnx.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/rnx.c.o
+.PHONY : src/rnx.c.o
 
-time.i: time.c.i
+src/rnx.i: src/rnx.c.i
 
-.PHONY : time.i
+.PHONY : src/rnx.i
 
 # target to preprocess a source file
-time.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/time.c.i
-.PHONY : time.c.i
+src/rnx.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/rnx.c.i
+.PHONY : src/rnx.c.i
 
-time.s: time.c.s
+src/rnx.s: src/rnx.c.s
 
-.PHONY : time.s
+.PHONY : src/rnx.s
 
 # target to generate assembly for a file
-time.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/time.c.s
-.PHONY : time.c.s
+src/rnx.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/rnx.c.s
+.PHONY : src/rnx.c.s
 
-trop.o: trop.c.o
+src/time.o: src/time.c.o
 
-.PHONY : trop.o
+.PHONY : src/time.o
 
 # target to build an object file
-trop.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/trop.c.o
-.PHONY : trop.c.o
+src/time.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/time.c.o
+.PHONY : src/time.c.o
 
-trop.i: trop.c.i
+src/time.i: src/time.c.i
 
-.PHONY : trop.i
+.PHONY : src/time.i
 
 # target to preprocess a source file
-trop.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/trop.c.i
-.PHONY : trop.c.i
+src/time.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/time.c.i
+.PHONY : src/time.c.i
 
-trop.s: trop.c.s
+src/time.s: src/time.c.s
 
-.PHONY : trop.s
+.PHONY : src/time.s
 
 # target to generate assembly for a file
-trop.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/trop.c.s
-.PHONY : trop.c.s
+src/time.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/time.c.s
+.PHONY : src/time.c.s
+
+src/trop.o: src/trop.c.o
+
+.PHONY : src/trop.o
+
+# target to build an object file
+src/trop.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/trop.c.o
+.PHONY : src/trop.c.o
+
+src/trop.i: src/trop.c.i
+
+.PHONY : src/trop.i
+
+# target to preprocess a source file
+src/trop.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/trop.c.i
+.PHONY : src/trop.c.i
+
+src/trop.s: src/trop.c.s
+
+.PHONY : src/trop.s
+
+# target to generate assembly for a file
+src/trop.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/src/trop.c.s
+.PHONY : src/trop.c.s
 
 # Help Target
 help:
@@ -422,36 +422,36 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... SPP"
-	@echo "... CMat.o"
-	@echo "... CMat.i"
-	@echo "... CMat.s"
-	@echo "... SPPAlgorithm.o"
-	@echo "... SPPAlgorithm.i"
-	@echo "... SPPAlgorithm.s"
-	@echo "... SatPos.o"
-	@echo "... SatPos.i"
-	@echo "... SatPos.s"
-	@echo "... azel.o"
-	@echo "... azel.i"
-	@echo "... azel.s"
-	@echo "... com.o"
-	@echo "... com.i"
-	@echo "... com.s"
-	@echo "... iono.o"
-	@echo "... iono.i"
-	@echo "... iono.s"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
-	@echo "... rnx.o"
-	@echo "... rnx.i"
-	@echo "... rnx.s"
-	@echo "... time.o"
-	@echo "... time.i"
-	@echo "... time.s"
-	@echo "... trop.o"
-	@echo "... trop.i"
-	@echo "... trop.s"
+	@echo "... src/CMat.o"
+	@echo "... src/CMat.i"
+	@echo "... src/CMat.s"
+	@echo "... src/SPPAlgorithm.o"
+	@echo "... src/SPPAlgorithm.i"
+	@echo "... src/SPPAlgorithm.s"
+	@echo "... src/SatPos.o"
+	@echo "... src/SatPos.i"
+	@echo "... src/SatPos.s"
+	@echo "... src/azel.o"
+	@echo "... src/azel.i"
+	@echo "... src/azel.s"
+	@echo "... src/com.o"
+	@echo "... src/com.i"
+	@echo "... src/com.s"
+	@echo "... src/iono.o"
+	@echo "... src/iono.i"
+	@echo "... src/iono.s"
+	@echo "... src/main.o"
+	@echo "... src/main.i"
+	@echo "... src/main.s"
+	@echo "... src/rnx.o"
+	@echo "... src/rnx.i"
+	@echo "... src/rnx.s"
+	@echo "... src/time.o"
+	@echo "... src/time.i"
+	@echo "... src/time.s"
+	@echo "... src/trop.o"
+	@echo "... src/trop.i"
+	@echo "... src/trop.s"
 .PHONY : help
 
 

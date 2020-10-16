@@ -1,0 +1,191 @@
+        -:    0:Source:/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.c
+        -:    0:Graph:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/SatPos.c.gcno
+        -:    0:Data:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/SatPos.c.gcda
+        -:    0:Runs:1
+        -:    1:#include "SatPos.h"
+        -:    2:
+       44:    3:double Calculate_E(double E_initial, double M, double e, double tol, int iter) {
+       44:    4:    double E = E_initial;
+        -:    5:    int i;
+        -:    6:    double err;
+      159:    7:    for (i = 0; i < iter; i++) {
+       44:    7-block  0
+      115:    7-block  1
+      159:    7-block  2
+      159:    8:        err = (E - e * sin(E) - M) / (1 - e * cos(E));
+      159:    9:        if (fabs(err) > tol)
+      159:    9-block  0
+      115:   10:            E -= err;
+      115:   10-block  0
+        -:   11:        else
+       44:   12:            break;
+       44:   12-block  0
+        -:   13:    }
+        -:   14:    // printf("------------------calculate E, Newton's Method--------------------\n");
+        -:   15:    // printf("iter = %d \n", i);
+        -:   16:    // printf("计算偏近点角 E = %f\n", E);
+        -:   17:    // if (i == iter)
+        -:   18:    //     printf("    no convergence guarantee\n");
+        -:   19:    // else
+        -:   20:    //     printf("    convergence guarantee\n");
+        -:   21:    // printf("-------------------------------------------------------------------\n\n");
+       44:   22:    return E;
+       44:   22-block  0
+        -:   23:}
+        -:   24:
+       44:   25:Coord SatPos_Cal(GPS_BRDEPH *gps_brd, double t) {
+        -:   26:    /*卫星轨道参数改正及计算*/
+        -:   27:
+        -:   28:    //1. 计算卫星运动的平均角速度n
+       44:   29:    double n = sqrt(GM) / pow(gps_brd->roota, 3) + gps_brd->dn;
+        -:   30:
+        -:   31:    //2. 计算观测瞬间卫星平近点角M
+       44:   32:    double dt = t - gps_brd->toe;
+       44:   33:    double M = gps_brd->m0 + n * dt;
+        -:   34:
+        -:   35:    //3. 计算偏近点角E
+       44:   36:    double E = Calculate_E(M, M, gps_brd->e, 1e-20, 10); //初始值为M
+       44:   36-block  0
+        -:   37:
+        -:   38:    //4. 计算真近点角f
+       44:   39:    double f = atan2((sqrt(1 - gps_brd->e * gps_brd->e) * sin(E)), (cos(E) - gps_brd->e));
+        -:   40:
+        -:   41:    //5. 升交角距u_prime
+       44:   42:    double u_prime = gps_brd->omega + f;
+        -:   43:
+        -:   44:    //6. 计算摄动改正项
+       44:   45:    double cos_2u_prime = cos(2 * u_prime);
+       44:   46:    double sin_2u_prime = sin(2 * u_prime);
+       44:   47:    double delta_u = gps_brd->cuc * cos_2u_prime + gps_brd->cus * sin_2u_prime;
+       44:   48:    double delta_r = gps_brd->crc * cos_2u_prime + gps_brd->crs * sin_2u_prime;
+       44:   49:    double delta_i = gps_brd->cic * cos_2u_prime + gps_brd->cis * sin_2u_prime;
+        -:   50:
+        -:   51:    //7. 对u_prime, r_prime, i_0进行摄动改正
+       44:   52:    double u = u_prime + delta_u;
+       44:   53:    double r = gps_brd->roota * gps_brd->roota * (1 - gps_brd->e * cos(E)) + delta_r;
+       44:   54:    double i = gps_brd->i0 + delta_i + gps_brd->i_dot * dt;
+        -:   55:
+        -:   56:    //8. 计算观测瞬间升交点经度L
+       44:   57:    double L = gps_brd->Omega0 + gps_brd->Omega_dot * dt - OMEGA_E * t;
+        -:   58:
+        -:   59:    /* 卫星轨道面坐标计算 */
+       44:   60:    double x = r * cos(u);
+       44:   61:    double y = r * sin(u);
+        -:   62:
+        -:   63:    /* 轨道面坐标 -> WGS84 */
+       44:   64:    Coord satPos = {0, 0, 0};
+        -:   65:    // double cL = cos(L);
+        -:   66:    // double sL = sin(L);
+        -:   67:    // double ci = cos(i);
+        -:   68:    // double si = sin(i);
+        -:   69:    // satPos.X = x * cL - y * sL * ci;
+        -:   70:    // satPos.Y = x * sL + y * cL * ci;
+        -:   71:    // satPos.Z = y * si;
+        -:   72:
+       44:   73:    satPos.X = x * cos(L) - y * sin(L) * cos(i);
+       44:   74:    satPos.Y = x * sin(L) + y * cos(L) * cos(i);
+       44:   75:    satPos.Z = y * sin(i);
+        -:   76:
+        -:   77:    //中间过程
+        -:   78:    // printf("计算卫星运动的平均角速度 n = %.15f \n", n);
+        -:   79:    // printf("计算观测瞬间卫星平近点角 M = %.15f\n", M);
+        -:   80:    // printf("E = %.15f\n", E);
+        -:   81:    // printf("计算真近点角 f = %f\n", f);
+        -:   82:    // printf("升交角距 u_prime = %f\n", u_prime);
+        -:   83:    // printf("\n--------------计算摄动改正项--------------------\n", M);
+        -:   84:    // printf("delta_u = %f\n", delta_u);
+        -:   85:    // printf("delta_r = %f\n", delta_r);
+        -:   86:    // printf("delta_i = %f\n", delta_i);
+        -:   87:    // printf("------------------------------------------------\n", M);
+        -:   88:    // printf("--------------对u_prime, r_prime, i_0进行摄动改正---------------\n", M);
+        -:   89:    // printf("u = %f\n", u);
+        -:   90:    // printf("r = %f\n", r);
+        -:   91:    // printf("i = %f\n", i);
+        -:   92:    // printf("计算观测瞬间升交点经度 L = %f\n", L);
+        -:   93:    // printf("\n----------------卫星轨道面坐标------------------\n");
+        -:   94:    // printf("x = %f\n", x);
+        -:   95:    // printf("y = %f\n", y);
+        -:   96:
+        -:   97:    // printf("\n------------------------WGS84坐标-------------------------\n");
+        -:   98:
+       44:   99:    return satPos;
+        -:  100:}
+        -:  101:
+       35:  102:double Dist(Coord *p1, Coord *p2) {
+       35:  103:    double dX = p1->X - p2->X;
+       35:  104:    double dY = p1->Y - p2->Y;
+       35:  105:    double dZ = p1->Z - p2->Z;
+       35:  106:    double dist = sqrt(dX * dX + dY * dY + dZ * dZ);
+       35:  107:    return dist;
+       35:  107-block  0
+        -:  108:}
+        -:  109:
+        -:  110:/*
+        -:  111: * t: time on ground*/
+        9:  112:Coord SatPos_CorrSpread(GPS_BRDEPH *gps_brd, Coord *groundRef, double t) {
+        -:  113:    double t_spread, t_spread_prime, s2g_dist;
+        9:  114:    t_spread_prime = 0;
+        9:  115:    Coord satPos = SatPos_Cal(gps_brd, t - 0.07); //signal spreads for about 0.07s
+        9:  115-block  0
+       26:  116:    for (int i = 0; i < 5; i++) {
+       26:  116-block  0
+       26:  117:        s2g_dist = Dist(&satPos, groundRef);
+       26:  117-block  0
+       26:  118:        t_spread = s2g_dist / CLIGHT;
+       26:  119:        if (fabs(t_spread_prime - t_spread) < 1e-10) {
+        9:  120:            break;
+        9:  120-block  0
+        -:  121:        }
+       17:  122:        t_spread_prime = t_spread;
+       17:  123:        satPos = SatPos_Cal(gps_brd, t - t_spread);
+       17:  123-block  0
+        -:  124:    }
+        9:  125:    return satPos;
+        9:  125-block  0
+        -:  126:}
+        -:  127:
+        9:  128:double SatPos_CorrEarthRot(Coord *satPos, Coord *groundRef) {
+        9:  129:    double delta_rho = -
+        9:  130:                               OMEGA_E / CLIGHT *
+        9:  131:                       (satPos->Y * (groundRef->X - satPos->X) - satPos->X * (groundRef->Y - satPos->Y));
+        9:  132:    return delta_rho;
+        9:  132-block  0
+        -:  133:    //以下直接改卫星位置
+        -:  134://    double s2g_dist = Dist(&satPos, groundRef);
+        -:  135:    //double tau = s2g_dist / clight;
+        -:  136:    //double alpha = omega_e * tau;
+        -:  137:    //double sin_alpha = sin(alpha);
+        -:  138:    //double cos_alpha = cos(alpha);
+        -:  139:    // double X = satPos->X;
+        -:  140:    // satPos->X = X * cos_alpha + satPos->Y * sin_alpha;
+        -:  141:    // satPos->Y = -sin_alpha * X + cos_alpha * satPos->Y;
+        -:  142:}
+        -:  143:
+        9:  144:double SatPos_CorrRelative(Coord *satPos, Coord *satPos_v) {
+        9:  145:    double delta_rho = 2.0 / CLIGHT * (satPos->X * satPos_v->X +
+        9:  146:                                       satPos->Y * satPos_v->Y +
+        9:  147:                                       satPos->Z * satPos_v->Z);
+        9:  148:    return delta_rho;
+        9:  148-block  0
+        -:  149:}
+        -:  150:
+        -:  151:
+        9:  152:Coord SatVel(GPS_BRDEPH *gps_brd, double t) {
+        9:  153:    double dt = 1e-8;
+        9:  154:    Coord posLast = SatPos_Cal(gps_brd, t - dt);
+        9:  154-block  0
+        9:  155:    Coord posNext = SatPos_Cal(gps_brd, t + dt);
+        9:  156:    Coord vel = {posNext.X - posLast.X, posNext.Y - posLast.Y, posNext.Z - posLast.Z};
+        9:  157:    vel.X /= (2 * dt);
+        9:  158:    vel.Y /= (2 * dt);
+        9:  159:    vel.Z /= (2 * dt);
+        9:  160:    return vel;
+        -:  161:}
+        -:  162:
+        -:  163:
+        9:  164:double SatClk(GPS_BRDEPH *gps_brd, double t0) {
+        9:  165:    double dt = t0 - gps_brd->toe;
+        9:  166:    return (gps_brd->a0 + gps_brd->a1 * dt + gps_brd->a2 * dt * dt) * CLIGHT;
+        9:  166-block  0
+        -:  167:}
+        -:  168:

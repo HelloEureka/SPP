@@ -1,0 +1,1603 @@
+        -:    0:Source:/media/eureka/eureka/GNSS Algorithm/SPP/rnx.c
+        -:    0:Graph:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/rnx.c.gcno
+        -:    0:Data:/media/eureka/eureka/GNSS Algorithm/SPP/cmake-build-debug-coverage/CMakeFiles/SPP.dir/rnx.c.gcda
+        -:    0:Runs:1
+        -:    1://
+        -:    2:// Created by eureka on 2020/10/12.
+        -:    3://
+        -:    4:
+        -:    5:#include <stdio.h>
+        -:    6:#include <stdlib.h>
+        -:    7:#include <math.h>
+        -:    8:#include <string.h>
+        -:    9:#include "rnx.h"
+        -:   10:#include "global.h"
+        -:   11:
+        1:   12:void read_rnxnav(char csys, const char *flnbrd, double mjd0, double mjd1, BRDHEAD *hd,
+        -:   13:                 int *neph, GPS_BRDEPH ephm[MAXSYS][MAXEPH], GLONASS_BRDEPH ephg[MAXEPH])
+        -:   14:{
+        -:   15:    FILE *fp;
+        -:   16:    int i, k, isys, iy, im, id, ih, imin, lastpos, len;
+        -:   17:    char line[LEN_STRING], buf[LEN_STRING];
+        -:   18:    char *ptr;
+        -:   19:    double dt0, dt1, isec;
+        -:   20:    double data1, data2, data3;
+        -:   21:    int already;
+        -:   22:
+        1:   23:    GPS_BRDEPH eph = {0};
+        1:   24:    GLONASS_BRDEPH ephr = {0};
+        -:   25:
+        1:   26:    if ((fp = fopen(flnbrd, "r")) == NULL)
+        1:   26-block  0
+        -:   27:    {
+    #####:   28:        printf("***ERROR(read_rnxnav):cant open brd file %s\n", flnbrd);
+    %%%%%:   28-block  0
+    #####:   29:        exit(1);
+        -:   30:    }
+        1:   31:    memset(neph, 0, sizeof(int) * MAXSYS);
+        1:   32:    strncpy(line, "\0", LEN_STRING);
+        -:   33:
+       13:   34:    while (strstr(line, "END OF HEADER") == NULL)
+        1:   34-block  0
+       13:   34-block  1
+        -:   35:    {
+       12:   36:        strncpy(line, "\0", LEN_STRING);
+       12:   37:        fgets(line, LEN_STRING, fp);
+       12:   37-block  0
+       12:   38:        if (strstr(line, "RINEX VERSION / TYPE") != NULL)
+        -:   39:        {
+        1:   40:            sscanf(line, "%lf", &hd->ver);
+        1:   41:            if (hd->ver > 3.0)
+        1:   41-block  0
+        -:   42:            {
+        1:   43:                if (csys == 'M' && line[40] != 'M')
+        1:   43-block  0
+        1:   43-block  1
+        -:   44:                {
+    #####:   45:                    printf(
+    %%%%%:   45-block  0
+        -:   46:                            "###WARNING(read_rnxnav):there only broadcast for line[40]!\n");
+        -:   47:                }
+        -:   48:            }
+        -:   49:        }
+       11:   50:        else if (strstr(line, "PGM / RUN BY / DATE") != NULL)
+       11:   50-block  0
+        1:   51:            continue;
+        1:   51-block  0
+       10:   52:        else if (strstr(line, "COMMENT") != NULL)
+       10:   52-block  0
+        3:   53:            continue;
+        3:   53-block  0
+        7:   54:        else if (strstr(line, "ION ALPHA") != NULL)
+        7:   54-block  0
+        -:   55:        {
+        -:   56:        }
+        7:   57:        else if (strstr(line, "ION BETA") != NULL)
+        7:   57-block  0
+        -:   58:        {
+        -:   59:        }
+        -:   60:            //rinex 3.00 3.01 3.02
+        7:   61:        else if (strstr(line, "IONOSPHERIC CORR") != NULL)
+        7:   61-block  0
+        -:   62:        {
+    #####:   63:            if (!strncmp(line, "GPS ", 4) || !strncmp(line, "GPSA", 4))
+    %%%%%:   63-block  0
+    %%%%%:   63-block  1
+        -:   64:            {
+    #####:   65:                i = index_string(SYS, 'G');
+    %%%%%:   65-block  0
+    #####:   66:                k = 0;
+        -:   67:            }
+    #####:   68:            else if (!strncmp(line, "GPSB", 4))
+    %%%%%:   68-block  0
+        -:   69:            {
+    #####:   70:                i = index_string(SYS, 'G');
+    %%%%%:   70-block  0
+    #####:   71:                k = 1;
+        -:   72:            }
+    #####:   73:            else if (!strncmp(line, "GAL ", 4))
+    %%%%%:   73-block  0
+        -:   74:            {
+    #####:   75:                i = index_string(SYS, 'E');
+    %%%%%:   75-block  0
+    #####:   76:                k = 0;
+        -:   77:            }
+    #####:   78:            else if (!strncmp(line, "BDS ", 4) || !strncmp(line, "BDSA", 4))
+    %%%%%:   78-block  0
+    %%%%%:   78-block  1
+        -:   79:            {
+    #####:   80:                i = index_string(SYS, 'C');
+    %%%%%:   80-block  0
+    #####:   81:                k = 0;
+        -:   82:            }
+    #####:   83:            else if (!strncmp(line, "BDSB", 4))
+    %%%%%:   83-block  0
+        -:   84:            {
+    #####:   85:                i = index_string(SYS, 'C');
+    %%%%%:   85-block  0
+    #####:   86:                k = 1;
+        -:   87:            }
+    #####:   88:            else if (!strncmp(line, "QZS ", 4) || !strncmp(line, "QZSA", 4))
+    %%%%%:   88-block  0
+    %%%%%:   88-block  1
+        -:   89:            {
+    #####:   90:                i = index_string(SYS, 'J');
+    %%%%%:   90-block  0
+    #####:   91:                k = 0;
+        -:   92:            }
+    #####:   93:            else if (!strncmp(line, "QZSB", 4))
+    %%%%%:   93-block  0
+        -:   94:            {
+    #####:   95:                i = index_string(SYS, 'J');
+    %%%%%:   95-block  0
+    #####:   96:                k = 1;
+        -:   97:            }
+        -:   98:            else
+    #####:   99:                printf("###WARNING(read_rnxnav):unknown ionospheric corr!\n");
+    %%%%%:   99-block  0
+        -:  100:
+    #####:  101:            strncpy(hd->ionc[i][k], line, 4);
+    #####:  102:            ptr = line;
+    #####:  103:            while (*ptr != '\0')
+    %%%%%:  103-block  0
+    %%%%%:  103-block  1
+        -:  104:            {
+    #####:  105:                if (*ptr == 'D')
+    %%%%%:  105-block  0
+    #####:  106:                    *ptr = 'e';
+    %%%%%:  106-block  0
+    #####:  107:                ptr++;
+    %%%%%:  107-block  0
+        -:  108:            }
+    #####:  109:            sscanf(line, "%*s%lf%lf%lf%lf", hd->ion[i][k], hd->ion[i][k] + 1,
+    #####:  110:                   hd->ion[i][k] + 2, hd->ion[i][k] + 3);
+    %%%%%:  110-block  0
+        -:  111:        }
+        7:  112:        else if (strstr(line, "DELTA-UTC: A0,A1,T,W") != NULL)
+        7:  112-block  0
+        -:  113:        {
+    #####:  114:            i = index_string(SYS, csys);
+    %%%%%:  114-block  0
+    #####:  115:            if (i == -1)
+        -:  116:            {
+    #####:  117:                printf(
+    %%%%%:  117-block  0
+        -:  118:                        "$$$MESSAGE(read_rnxnav):DELTA-UTC: A0,A1,T,W is only valid for single system!\n");
+    #####:  119:                continue;
+        -:  120:            }
+    #####:  121:            ptr = line;
+    #####:  122:            while (*ptr != '\0')
+    %%%%%:  122-block  0
+    %%%%%:  122-block  1
+        -:  123:            {
+    #####:  124:                if (*ptr == 'D')
+    %%%%%:  124-block  0
+    #####:  125:                    *ptr = 'e';
+    %%%%%:  125-block  0
+    #####:  126:                ptr++;
+    %%%%%:  126-block  0
+        -:  127:            }
+    #####:  128:            sscanf(line, "%lf%lf%lf%lf", hd->tim[i][0], hd->tim[i][0] + 1,
+    #####:  129:                   hd->tim[i][0] + 2, hd->tim[i][0] + 3);
+    %%%%%:  129-block  0
+        -:  130:        }
+        7:  131:        else if (strstr(line, "TIME SYSTEM CORR") != NULL)
+        7:  131-block  0
+        -:  132:        {
+        5:  133:            if (!strncmp(line, "GPUT", 4))
+        5:  133-block  0
+        -:  134:            {
+    #####:  135:                i = index_string(SYS, 'G');
+    %%%%%:  135-block  0
+    #####:  136:                k = 0;
+        -:  137:            }
+        5:  138:            else if (!strncmp(line, "GLUT", 4))
+        5:  138-block  0
+        -:  139:            {
+        1:  140:                i = index_string(SYS, 'R');
+        1:  140-block  0
+        1:  141:                k = 0;
+        -:  142:            }
+        4:  143:            else if (!strncmp(line, "GAUT", 4))
+        4:  143-block  0
+        -:  144:            {
+        1:  145:                i = index_string(SYS, 'E');
+        1:  145-block  0
+        1:  146:                k = 0;
+        -:  147:            }
+        3:  148:            else if (!strncmp(line, "BDUT", 4))
+        3:  148-block  0
+        -:  149:            {
+        1:  150:                i = index_string(SYS, 'C');
+        1:  150-block  0
+        1:  151:                k = 0;
+        -:  152:            }
+        2:  153:            else if (!strncmp(line, "SBUT", 4))
+        2:  153-block  0
+        -:  154:            {
+    #####:  155:                i = index_string(SYS, 'S');
+    %%%%%:  155-block  0
+    #####:  156:                k = 0;
+        -:  157:            }
+        2:  158:            else if (!strncmp(line, "QZUT", 4))
+        2:  158-block  0
+        -:  159:            {
+        1:  160:                i = index_string(SYS, 'J');
+        1:  160-block  0
+        1:  161:                k = 0;
+        -:  162:            }
+        1:  163:            else if (!strncmp(line, "GAGP", 4))
+        1:  163-block  0
+        -:  164:            {
+        1:  165:                i = index_string(SYS, 'G');
+        1:  165-block  0
+        1:  166:                k = 1;
+        -:  167:            }
+    #####:  168:            else if (!strncmp(line, "GLGP", 4))
+    %%%%%:  168-block  0
+        -:  169:            {
+    #####:  170:                i = index_string(SYS, 'R');
+    %%%%%:  170-block  0
+    #####:  171:                k = 1;
+        -:  172:            }
+    #####:  173:            else if (!strncmp(line, "QZGP", 4))
+    %%%%%:  173-block  0
+        -:  174:            {
+    #####:  175:                i = index_string(SYS, 'J');
+    %%%%%:  175-block  0
+    #####:  176:                k = 1;
+        -:  177:            }
+        -:  178:            else
+        -:  179:            {
+    #####:  180:                printf(
+    %%%%%:  180-block  0
+        -:  181:                        "$$$MESSAGE(read_rnxnav):unknown unknown TIME SYSTEM CORR!\n");
+    #####:  182:                continue;
+        -:  183:            }
+        5:  184:            strncpy(hd->timc[i][k], line, 4);
+        5:  185:            ptr = line;
+      410:  186:            while (*ptr != '\0')
+        5:  186-block  0
+      410:  186-block  1
+        -:  187:            {
+      405:  188:                if (*ptr == 'D')
+      405:  188-block  0
+        1:  189:                    *ptr = 'e';
+        1:  189-block  0
+      405:  190:                ptr++;
+      405:  190-block  0
+        -:  191:            }
+        5:  192:            sscanf(line, "%*5c%lf%lf%lf%lf", hd->tim[i][k], hd->tim[i][k] + 1,
+        5:  193:                   hd->tim[i][k] + 2, hd->tim[i][k] + 3);
+        5:  193-block  0
+        -:  194:        }
+        2:  195:        else if (strstr(line, "LEAP SECONDS") != NULL)
+        2:  195-block  0
+        1:  196:            sscanf(line, "%d", &hd->leap);
+        1:  196-block  0
+        -:  197:    }
+    58445:  198:    while (!feof(fp))
+        1:  198-block  0
+    58445:  198-block  1
+        -:  199:    {
+    58444:  200:        lastpos = ftell(fp);
+    58444:  200-block  0
+    58444:  201:        fgets(line, LEN_STRING, fp);
+    58444:  202:        fseek(fp, lastpos - ftell(fp), SEEK_CUR);
+    58444:  203:        memset(&eph, 0, sizeof(eph));
+    58444:  204:        if (hd->ver < 3.0)
+        -:  205:        {
+    #####:  206:            strncpy(buf + 1, line, strlen(line));
+    #####:  207:            buf[0] = csys;
+    %%%%%:  207-block  0
+        -:  208:        }
+        -:  209:        else
+    58444:  210:            buf[0] = line[0];
+    58444:  210-block  0
+        -:  211:
+    58444:  212:        switch (buf[0])
+    58444:  212-block  0
+        -:  213:        {
+     6055:  214:            case 'G':
+        -:  215:            case 'E':
+        -:  216:            case 'C':
+        -:  217:            case 'J':
+     6055:  218:                isys = index_string(SYS, buf[0]);
+     6055:  218-block  0
+     6055:  219:                len = 0;
+     6055:  220:                strncpy(buf, "", LEN_STRING);
+    54495:  221:                for (i = 0; i < 8; i++)
+    54495:  221-block  0
+        -:  222:                {
+    48440:  223:                    fgets(line, LEN_STRING, fp);
+    48440:  223-block  0
+    48440:  224:                    if (i != 7)
+    42385:  225:                        filleph(line, hd->ver);
+    42385:  225-block  0
+    48440:  226:                    if (hd->ver < 3)
+    48440:  226-block  0
+        -:  227:                    {
+    #####:  228:                        if (buf[0] != csys)
+    %%%%%:  228-block  0
+    #####:  229:                            buf[0] = csys;
+    %%%%%:  229-block  0
+    #####:  230:                        strncpy(buf + 1 + len, line, strlen(line));
+    %%%%%:  230-block  0
+        -:  231:                    }
+        -:  232:                    else
+    48440:  233:                        strncpy(buf + len, line, strlen(line));
+    48440:  233-block  0
+    48440:  234:                    len += strlen(line);
+    48440:  234-block  0
+        -:  235:                }
+     6055:  236:                ptr = buf;
+        -:  237:
+  3887310:  238:                while (*ptr != '\0')
+     6055:  238-block  0
+  3887310:  238-block  1
+        -:  239:                {
+  3881255:  240:                    if (*ptr == '\n' || *ptr == '\r')
+  3881255:  240-block  0
+  3875200:  240-block  1
+     6055:  241:                        *ptr = ' ';
+     6055:  241-block  0
+        -:  242:
+  3881255:  243:                    if (*ptr == 'D')
+  3881255:  243-block  0
+    #####:  244:                        *ptr = 'e';
+    %%%%%:  244-block  0
+  3881255:  245:                    ptr++;
+  3881255:  245-block  0
+        -:  246:                }
+     6055:  247:                if (hd->ver < 3.0)
+     6055:  247-block  0
+        -:  248:                {
+    #####:  249:                    buf[0] = csys;
+    #####:  250:                    if (buf[1] == ' ')
+    %%%%%:  250-block  0
+    #####:  251:                        buf[1] = '0';
+    %%%%%:  251-block  0
+        -:  252:                }
+     6055:  253:                if (buf[0] == 'C')
+     6055:  253-block  0
+        -:  254:                {
+     1068:  255:                    sscanf(buf,
+        -:  256:                           "%s%d%d%d%d%d%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf",
+        -:  257:                           eph.cprn, &iy, &im, &id, &ih, &imin, &isec, &eph.a0,
+        -:  258:                           &eph.a1, &eph.a2, &eph.aode, &eph.crs, &eph.dn, &eph.m0,
+        -:  259:                           &eph.cuc, &eph.e, &eph.cus, &eph.roota, &eph.toe,
+        -:  260:                           &eph.cic, &eph.Omega0, &eph.cis, &eph.i0, &eph.crc,
+        -:  261:                           &eph.omega, &eph.Omega_dot, &eph.i_dot, &eph.resvd0,
+        -:  262:                           &eph.week, &eph.resvd1, &eph.accu, &eph.hlth, &eph.tgd,
+        -:  263:                           &eph.aodc, &data1, &eph.iodc, &data3, &eph.signal_idx);
+    1068*:  264:                    eph.signal_idx = (int)eph.signal_idx == 0 ? 1 : (int)eph.signal_idx;
+     1068:  264-block  0
+    %%%%%:  264-block  1
+     1068:  264-block  2
+    1068*:  265:                    if (eph.signal_idx > 6 && eph.signal_idx <= 13)
+     1068:  265-block  0
+    %%%%%:  265-block  1
+        -:  266:                    {
+    #####:  267:                        eph.delta_A = eph.roota;
+    #####:  268:                        eph.A_DOT = eph.resvd0;
+    #####:  269:                        eph.delta_n_dot = eph.resvd1;
+    %%%%%:  269-block  0
+        -:  270:                    }
+    1068*:  271:                    if (eph.signal_idx == 1 || eph.signal_idx == 0)
+     1068:  271-block  0
+    %%%%%:  271-block  1
+        -:  272:                    { //B1I
+     1068:  273:                        eph.tgd_BDS[0] = eph.tgd;
+     1068:  274:                        eph.isc_BDS[0] = 0.0;
+     1068:  274-block  0
+        -:  275:                    }
+    #####:  276:                    else if (eph.signal_idx == 2)
+    %%%%%:  276-block  0
+        -:  277:                    { //B2I
+    #####:  278:                        eph.tgd_BDS[1] = eph.aodc;
+    #####:  279:                        eph.isc_BDS[1] = 0.0;
+    %%%%%:  279-block  0
+        -:  280:                    }
+    #####:  281:                    else if (eph.signal_idx == 3)
+    %%%%%:  281-block  0
+        -:  282:                    { //B3I
+    #####:  283:                        eph.tgd_BDS[2] = 0.0;
+    #####:  284:                        eph.isc_BDS[2] = 0.0;
+    %%%%%:  284-block  0
+        -:  285:                    }
+    #####:  286:                    else if (eph.signal_idx == 4)
+    %%%%%:  286-block  0
+        -:  287:                    { //B1Q
+    #####:  288:                        eph.tgd_BDS[3] = eph.tgd;
+    #####:  289:                        eph.isc_BDS[3] = 0.0;
+    %%%%%:  289-block  0
+        -:  290:                    }
+    #####:  291:                    else if (eph.signal_idx == 5)
+    %%%%%:  291-block  0
+        -:  292:                    { //B1Q
+    #####:  293:                        eph.tgd_BDS[4] = eph.aodc;
+    #####:  294:                        eph.isc_BDS[4] = 0.0;
+    %%%%%:  294-block  0
+        -:  295:                    }
+    #####:  296:                    else if (eph.signal_idx == 6)
+    %%%%%:  296-block  0
+        -:  297:                    { //B3Q
+    #####:  298:                        eph.tgd_BDS[5] = 0.0;
+    #####:  299:                        eph.isc_BDS[5] = 0.0;
+    %%%%%:  299-block  0
+        -:  300:                    }
+    #####:  301:                    else if (eph.signal_idx == 7)
+    %%%%%:  301-block  0
+        -:  302:                    { //B1C
+    #####:  303:                        eph.tgd_BDS[6] = eph.tgd;
+    #####:  304:                        eph.isc_BDS[6] = data3;
+    %%%%%:  304-block  0
+        -:  305:                    }
+    #####:  306:                    else if (eph.signal_idx == 8)
+    %%%%%:  306-block  0
+        -:  307:                    { //B2a
+    #####:  308:                        eph.tgd_BDS[7] = eph.tgd;
+    #####:  309:                        eph.isc_BDS[7] = data3;
+    %%%%%:  309-block  0
+        -:  310:                    }
+    #####:  311:                    else if (eph.signal_idx == 9)
+    %%%%%:  311-block  0
+        -:  312:                    { //B2bI
+    #####:  313:                        eph.tgd_BDS[8] = eph.tgd;
+    #####:  314:                        eph.isc_BDS[8] = 0.0;
+    %%%%%:  314-block  0
+        -:  315:                    }
+    #####:  316:                    else if (eph.signal_idx == 10)
+    %%%%%:  316-block  0
+        -:  317:                    { //B2bQ
+    #####:  318:                        eph.tgd_BDS[9] = eph.tgd;
+    #####:  319:                        eph.isc_BDS[9] = 0.0;
+    %%%%%:  319-block  0
+        -:  320:                    }
+    #####:  321:                    else if (eph.signal_idx == 11)
+    %%%%%:  321-block  0
+        -:  322:                    { //B1A
+    #####:  323:                        eph.tgd_BDS[10] = eph.tgd;
+    #####:  324:                        eph.isc_BDS[10] = data3;
+    %%%%%:  324-block  0
+        -:  325:                    }
+    #####:  326:                    else if (eph.signal_idx == 12)
+    %%%%%:  326-block  0
+        -:  327:                    { //B3A
+    #####:  328:                        eph.tgd_BDS[11] = 0.0;
+    #####:  329:                        eph.isc_BDS[11] = data3;
+    %%%%%:  329-block  0
+        -:  330:                    }
+    #####:  331:                    else if (eph.signal_idx == 13)
+    %%%%%:  331-block  0
+        -:  332:                    { //B3AE
+    #####:  333:                        eph.tgd_BDS[12] = eph.aodc;
+    #####:  334:                        eph.isc_BDS[12] = data3;
+    %%%%%:  334-block  0
+        -:  335:                    }
+        -:  336:                }
+        -:  337:                else
+        -:  338:                {
+     4987:  339:                    sscanf(buf,
+     4987:  339-block  0
+        -:  340:                           "%s%d%d%d%d%d%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf",
+        -:  341:                           eph.cprn, &iy, &im, &id, &ih, &imin, &isec, &eph.a0,
+        -:  342:                           &eph.a1, &eph.a2, &eph.aode, &eph.crs, &eph.dn, &eph.m0,
+        -:  343:                           &eph.cuc, &eph.e, &eph.cus, &eph.roota, &eph.toe, &eph.cic,
+        -:  344:                           &eph.Omega0, &eph.cis, &eph.i0, &eph.crc, &eph.omega,
+        -:  345:                           &eph.Omega_dot, &eph.i_dot, &eph.resvd0, &eph.week,
+        -:  346:                           &eph.resvd1, &eph.accu, &eph.hlth, &eph.tgd, &eph.aodc);
+        -:  347:                }
+     6055:  348:                if (eph.hlth > 0)
+     6055:  348-block  0
+      433:  349:                    continue;
+      433:  349-block  0
+     5622:  350:                yr2year(&iy);
+     5622:  350-block  0
+     5622:  351:                if (iy < 2000)
+    #####:  352:                    continue;
+    %%%%%:  352-block  0
+        -:  353:
+        -:  354:                // time of clock
+     5622:  355:                eph.mjd = modified_julday(iy, im, id); // TIME IN BDS TIME AND SHOULD NOT CHANGE IT INTO GPST BECAUSE THERE ARE OTHER TIME TAG IN THE EPHEMERIS
+     5622:  355-block  0
+     5622:  356:                eph.sod = ih * 3600.0 + imin * 60.0 + isec;
+        -:  357:
+        -:  358:
+        -:  359:
+        -:  360:                // adapter to bds
+     5622:  361:                if (eph.cprn[0] == 'C')
+        -:  362:                {
+        -:  363:                    //the week in broadcast file generated by WHU is GPS week,
+        -:  364:                    //but that in IGS meraged file is BDS week
+     1044:  365:                    mjd2wksow(eph.mjd, eph.sod, &k, &dt1);
+     1044:  365-block  0
+     1044:  366:                    if (k != (int)eph.week)
+     1044:  367:                        eph.week = 1356 + eph.week;
+     1044:  367-block  0
+     1044:  368:                    eph.tgd1 = eph.aodc;
+     1044:  368-block  0
+        -:  369:                }
+        -:  370:                //check time
+     5622:  371:                dt0 = 0.0;
+     5622:  372:                dt1 = 0.0;
+     5622:  373:                if (mjd0 != 0)
+     5622:  373-block  0
+        -:  374:                {
+     5622:  375:                    dt0 = eph.mjd + eph.sod / 86400.0 - mjd0;
+     5622:  375-block  0
+        -:  376:                }
+        -:  377:
+     5622:  378:                if (mjd1 != 0)
+     5622:  378-block  0
+        -:  379:                {
+     5622:  380:                    dt1 = eph.mjd + eph.sod / 86400.0 - mjd1;
+     5622:  380-block  0
+        -:  381:                }
+     5622:  382:                if (dt0 < -1.0 / 24.0 || dt1 > 1.0 / 24.0)
+     5622:  382-block  0
+     5622:  382-block  1
+    #####:  383:                    continue;
+    %%%%%:  383-block  0
+        -:  384:
+     5622:  385:                already = false;
+  4756183:  386:                for (i = 0; i < neph[isys]; i++)
+     5622:  386-block  0
+  4750561:  386-block  1
+  4756183:  386-block  2
+        -:  387:                {
+  4752664:  388:                    if (strstr(ephm[isys][i].cprn, eph.cprn) && ephm[isys][i].mjd == eph.mjd && ephm[isys][i].sod == eph.sod)
+  4752664:  388-block  0
+   205414:  388-block  1
+   205414:  388-block  2
+        -:  389:                    {
+     2103:  390:                        already = true;
+     2103:  391:                        break;
+     2103:  391-block  0
+        -:  392:                    }
+        -:  393:                }
+     5622:  394:                if (!already)
+     5622:  394-block  0
+        -:  395:                {
+     3519:  396:                    neph[isys] = neph[isys] + 1;
+     3519:  397:                    if (neph[isys] > MAXEPH)
+     3519:  397-block  0
+        -:  398:                    {
+    #####:  399:                        printf(
+    %%%%%:  399-block  0
+        -:  400:                                "ERROR(read_rnxnav):exceed the maxium ephemeris number!\n");
+    #####:  401:                        exit(1);
+        -:  402:                    }
+     3519:  403:                    memcpy(&ephm[isys][neph[isys] - 1], &eph, sizeof(eph));
+     3519:  403-block  0
+        -:  404:                }
+     5622:  405:                break;
+     5622:  405-block  0
+     1200:  406:            case 'R':
+     1200:  407:                isys = index_string(SYS, buf[0]);
+     1200:  407-block  0
+     1200:  408:                len = 0;
+     1200:  409:                strncpy(buf, "", LEN_STRING);
+     6000:  410:                for (i = 0; i < 4; i++)
+     6000:  410-block  0
+        -:  411:                {
+     4800:  412:                    fgets(line, LEN_STRING, fp);
+     4800:  412-block  0
+     4800:  413:                    if (hd->ver < 3)
+        -:  414:                    {
+    #####:  415:                        if (buf[0] != csys)
+    %%%%%:  415-block  0
+    #####:  416:                            buf[0] = csys;
+    %%%%%:  416-block  0
+    #####:  417:                        strncpy(buf + 1 + len, line, strlen(line));
+    %%%%%:  417-block  0
+        -:  418:                    }
+        -:  419:                    else
+     4800:  420:                        strncpy(buf + len, line, strlen(line));
+     4800:  420-block  0
+     4800:  421:                    len += strlen(line);
+     4800:  421-block  0
+        -:  422:                }
+     1200:  423:                ptr = buf;
+        -:  424:
+   390000:  425:                while (*ptr != '\0')
+     1200:  425-block  0
+   390000:  425-block  1
+        -:  426:                {
+   388800:  427:                    if (*ptr == '\n' || *ptr == '\r')
+   388800:  427-block  0
+   384000:  427-block  1
+        -:  428:                    {
+     4800:  429:                        *ptr = ' ';
+     4800:  429-block  0
+        -:  430:                    }
+   388800:  431:                    if (*ptr == 'D')
+   388800:  431-block  0
+        -:  432:                    {
+    #####:  433:                        *ptr = 'e';
+    %%%%%:  433-block  0
+        -:  434:                    }
+   388800:  435:                    ptr++;
+   388800:  435-block  0
+        -:  436:                }
+        -:  437:
+     1200:  438:                if (hd->ver < 3.0)
+     1200:  438-block  0
+        -:  439:                {
+    #####:  440:                    buf[0] = csys;
+    #####:  441:                    if (buf[1] == ' ')
+    %%%%%:  441-block  0
+    #####:  442:                        buf[1] = '0';
+    %%%%%:  442-block  0
+        -:  443:                }
+        -:  444:
+     1200:  445:                sscanf(buf,
+        -:  446:                       "%s%d%d%d%d%d%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf%lf",
+        -:  447:                       ephr.cprn, &iy, &im, &id, &ih, &imin, &isec, &ephr.tau,
+        -:  448:                       &ephr.gamma, &ephr.tk, &ephr.pos[0], &ephr.vel[0],
+        -:  449:                       &ephr.acc[0], &ephr.health, &ephr.pos[1], &ephr.vel[1],
+        -:  450:                       &ephr.acc[1], &ephr.frenum, &ephr.pos[2], &ephr.vel[2],
+        -:  451:                       &ephr.acc[2], &ephr.age);
+        -:  452:
+     1200:  453:                if (ephr.health > 0.0)
+     1200:  453-block  0
+       48:  454:                    continue;
+       48:  454-block  0
+        -:  455:
+     1152:  456:                yr2year(&iy);
+     1152:  456-block  0
+     1152:  457:                if (iy < 2000)
+    #####:  458:                    continue;
+    %%%%%:  458-block  0
+        -:  459:
+     1152:  460:                ephr.mjd = modified_julday(iy, im, id);
+     1152:  460-block  0
+     1152:  461:                ephr.sod = ih * 3600.0 + imin * 60.0 + isec;
+        -:  462:
+        -:  463:                //check time
+     1152:  464:                dt0 = 0.0;
+     1152:  465:                dt1 = 0.0;
+     1152:  466:                if (mjd0 != 0)
+        -:  467:                {
+     1152:  468:                    dt0 = ephr.mjd + ephr.sod / 86400.0 - mjd0;
+     1152:  468-block  0
+        -:  469:                }
+        -:  470:
+     1152:  471:                if (mjd1 != 0)
+     1152:  471-block  0
+        -:  472:                {
+     1152:  473:                    dt1 = ephr.mjd + ephr.sod / 86400.0 - mjd1;
+     1152:  473-block  0
+        -:  474:                }
+        -:  475:
+     1152:  476:                if (dt0 < -1.0 / 24.0 || dt1 > 1.0 / 24.0)
+     1152:  476-block  0
+     1152:  476-block  1
+    #####:  477:                    continue;
+    %%%%%:  477-block  0
+        -:  478:
+     1152:  479:                already = false;
+   664128:  480:                for (i = 0; i < neph[isys]; i++)
+     1152:  480-block  0
+   662976:  480-block  1
+   664128:  480-block  2
+        -:  481:                {
+   662976:  482:                    if (strstr(ephg[i].cprn, ephr.cprn) && ephg[i].mjd == ephr.mjd && ephg[i].sod == ephr.sod)
+   662976:  482-block  0
+    27072:  482-block  1
+    27072:  482-block  2
+        -:  483:                    {
+    #####:  484:                        already = true;
+    #####:  485:                        break;
+    %%%%%:  485-block  0
+        -:  486:                    }
+        -:  487:                }
+     1152:  488:                if (!already)
+     1152:  488-block  0
+        -:  489:                {
+     1152:  490:                    neph[isys] = neph[isys] + 1;
+     1152:  491:                    if (neph[isys] > MAXEPH)
+     1152:  491-block  0
+        -:  492:                    {
+    #####:  493:                        printf(
+    %%%%%:  493-block  0
+        -:  494:                                "***ERROR(read_rnxnav):exceed the maxium ephemeris number!\n");
+    #####:  495:                        exit(1);
+        -:  496:                    }
+     1152:  497:                    memcpy(&ephg[neph[isys] - 1], &ephr, sizeof(ephr));
+     1152:  497-block  0
+        -:  498:                }
+     1152:  499:                break;
+     1152:  499-block  0
+    51189:  500:            default:
+    51189:  501:                fgets(line, LEN_STRING, fp);
+    51189:  501-block  0
+    51189:  502:                break;
+        -:  503:        }
+        -:  504:    }
+        1:  505:    fclose(fp);
+        1:  505-block  0
+        1:  506:}
+        -:  507:
+        1:  508:void read_rnxobs(FILE *fp, int jd0, double sod0, int nprn0,
+        -:  509:                 char (*cprn0)[LEN_PRN], int *nfreq,
+        -:  510:                 char freq[MAXSYS][MAXFREQ][LEN_FREQ], RNXHEAD *HD, RNXOBS *OB)
+        -:  511:{
+        1:  512:    char line[1024] = {'\0'};
+        1:  513:    char varword[LEN_STRING], code[LEN_OBSTYPE] = {'\0'};
+        1:  514:    int nprn = 0, iflag = 0, i, j, k, isat, isys;
+        -:  515:    int iy, im, id, ih, imi, lastpos, nline, ntemp, count, iobs;
+        -:  516:    double obs[MAXOBSTYP];
+        -:  517:    double sec, ds;
+        -:  518:    char cprn[MAXSAT][LEN_PRN];
+      151:  519:    for (isat = 0; isat < MAXSAT; isat++)
+        1:  519-block  0
+      151:  519-block  1
+      150:  520:        strncpy(cprn[isat], "\0", LEN_PRN);
+      150:  520-block  0
+        1:  521:    int lfind = false;
+       33:  522:    for (i = 0; i < CKF.nprn; i++)
+        1:  522-block  0
+       32:  522-block  1
+       33:  522-block  2
+        -:  523:    {
+      224:  524:        for (j = 0; j < 2 * MAXFREQ; j++)
+       32:  524-block  0
+      224:  524-block  1
+      192:  525:            OB->obs[i][j] = 0.0;
+      192:  525-block  0
+        -:  526:    }
+        3:  527:    while (!lfind)
+        1:  527-block  0
+        3:  527-block  1
+        -:  528:    {
+        2:  529:        lastpos = ftell(fp);
+        2:  529-block  0
+        2:  530:        fgets(line, LEN_STRING, fp);
+        2:  531:        if (feof(fp))
+        -:  532:        {
+    #####:  533:            return;
+    %%%%%:  533-block  0
+    %%%%%:  533-block  1
+        -:  534:        }
+        2:  535:        if (len_trim(line) == 0)
+        2:  535-block  0
+    #####:  536:            continue;
+    %%%%%:  536-block  0
+        2:  537:        if (HD->ver < 3.0)
+        2:  537-block  0
+        -:  538:        {
+    #####:  539:            substringEx(varword, line, 29, 3);
+    %%%%%:  539-block  0
+    #####:  540:            nprn = atoi(varword);
+    #####:  541:            substringEx(varword, line, 26, 3);
+    #####:  542:            iflag = atoi(varword);
+        -:  543:        }
+        -:  544:        else
+        -:  545:        {
+        2:  546:            substringEx(varword, line, 32, 3);
+        2:  546-block  0
+        2:  547:            nprn = atoi(varword);
+        2:  548:            substringEx(varword, line, 29, 3);
+        2:  549:            iflag = atoi(varword);
+        -:  550:        }
+        2:  551:        if (nprn > MAXSAT)
+        2:  551-block  0
+        -:  552:        {
+    #####:  553:            printf("satellite number > MAXSAT!\n");
+    %%%%%:  553-block  0
+    #####:  554:            exit(1);
+        -:  555:        }
+        2:  556:        if (iflag > 1)
+        2:  556-block  0
+        -:  557:        {
+    #####:  558:            if (HD->ver < 3.0)
+    %%%%%:  558-block  0
+        -:  559:            {
+    #####:  560:                for (i = 0; i < nprn; i++)
+    %%%%%:  560-block  0
+    %%%%%:  560-block  1
+    %%%%%:  560-block  2
+        -:  561:                {
+    #####:  562:                    fgets(line, LEN_STRING, fp);
+    %%%%%:  562-block  0
+    #####:  563:                    if (strstr(line, "ANTENNA: DELTA H/E/N") != NULL)
+    #####:  564:                        sscanf(line, "%lf%lf%lf", &HD->h, &HD->e, &HD->n);
+    %%%%%:  564-block  0
+        -:  565:                }
+    #####:  566:                continue;
+    %%%%%:  566-block  0
+        -:  567:            }
+        -:  568:        }
+        -:  569:        // initialize obs
+      302:  570:        for (i = 0; i < MAXSAT; i++)
+        2:  570-block  0
+      300:  570-block  1
+      302:  570-block  2
+     2100:  571:            for (j = 0; j < 2 * MAXFREQ; j++)
+      300:  571-block  0
+     2100:  571-block  1
+     1800:  572:                OB->obs[i][j] = 0.0;
+     1800:  572-block  0
+        2:  573:        if (HD->ver >= 3.0)
+        2:  573-block  0
+        2:  574:            sscanf(line, "%*s%d%d%d%d%d%lf", &iy, &im, &id, &ih, &imi, &sec);
+        2:  574-block  0
+        -:  575:        else
+    #####:  576:            sscanf(line, "%d%d%d%d%d%lf", &iy, &im, &id, &ih, &imi, &sec);
+    %%%%%:  576-block  0
+        2:  577:        yr2year(&iy);
+        2:  577-block  0
+        2:  578:        OB->jd = modified_julday(iy, im, id);
+       2*:  579:        OB->tsec = nint(ih * 3600.0 + imi * 60.0 + sec);
+        2:  579-block  0
+    %%%%%:  579-block  1
+        2:  580:        if (HD->ver < 3.0)
+        2:  580-block  0
+        -:  581:        {
+    #####:  582:            if (nprn % 12 != 0)
+    %%%%%:  582-block  0
+    #####:  583:                nline = (int)(nprn / 12.0) + 1;
+    %%%%%:  583-block  0
+        -:  584:            else
+    #####:  585:                nline = nprn / 12;
+    %%%%%:  585-block  0
+    #####:  586:            if (nprn == 0)
+    %%%%%:  586-block  0
+    #####:  587:                nline = 1;
+    %%%%%:  587-block  0
+        -:  588:        }
+        -:  589:
+        2:  590:        if (jd0 != 0)
+        2:  590-block  0
+        -:  591:        {
+        2:  592:            ds = timdif(jd0, sod0, OB->jd, OB->tsec);
+        2:  592-block  0
+        -:  593:            // the requested time  is behind the current time in the obsfile
+        2:  594:            if (ds < -MAXWND)
+        -:  595:            {
+    #####:  596:                fseek(fp, lastpos - ftell(fp), SEEK_CUR);
+    %%%%%:  596-block  0
+        -:  597:                /*printf(
+        -:  598:                 "###Warning(read_rnx_obs): lost time %8.2lf!\n",
+        -:  599:                 sod0, OB->tsec);*/
+    #####:  600:                return;
+        -:  601:            }
+        2:  602:            else if (ds > MAXWND)
+        2:  602-block  0
+        -:  603:            {
+        1:  604:                if (HD->ver < 3.0)
+        1:  604-block  0
+        -:  605:                {
+    #####:  606:                    for (i = 0; i < nline - 1; i++)
+    %%%%%:  606-block  0
+    %%%%%:  606-block  1
+    #####:  607:                        fgets(line, LEN_STRING, fp);
+    %%%%%:  607-block  0
+    #####:  608:                    if (HD->nobstype[0] % 5 != 0)
+    %%%%%:  608-block  0
+    #####:  609:                        ntemp = nprn * ((int)(HD->nobstype[0] / 5) + 1);
+    %%%%%:  609-block  0
+        -:  610:                    else
+    #####:  611:                        ntemp = nprn * (HD->nobstype[0] / 5);
+    %%%%%:  611-block  0
+        -:  612:
+    #####:  613:                    for (i = 0; i < ntemp; i++)
+    %%%%%:  613-block  0
+    %%%%%:  613-block  1
+    #####:  614:                        fgets(line, LEN_STRING, fp);
+    %%%%%:  614-block  0
+        -:  615:                }
+        -:  616:                else
+        -:  617:                {
+       25:  618:                    for (i = 0; i < nprn; i++)
+        1:  618-block  0
+       25:  618-block  1
+       24:  619:                        fgets(line, LEN_STRING, fp);
+       24:  619-block  0
+        -:  620:                }
+        -:  621:            }
+        -:  622:            else
+        -:  623:            {
+        1:  624:                lfind = true;
+        1:  625:                CKF.mjd = OB->jd;
+        1:  626:                CKF.sod = ih * 3600.0 + imi * 60.0 + sec;
+        1:  626-block  0
+        -:  627:            }
+        -:  628:        }
+        -:  629:        else
+        -:  630:        {
+    #####:  631:            break;
+    %%%%%:  631-block  0
+        -:  632:        }
+        -:  633:    }
+        -:  634:
+        1:  635:    if (HD->t0[0] == 0)
+        1:  635-block  0
+        -:  636:    {
+    #####:  637:        HD->t0[0] = iy;
+    #####:  638:        HD->t0[1] = im;
+    #####:  639:        HD->t0[2] = id;
+    #####:  640:        HD->t0[3] = ih;
+    #####:  641:        HD->t0[4] = imi;
+    #####:  642:        HD->t0[5] = (int)sec;
+    %%%%%:  642-block  0
+        -:  643:    }
+        1:  644:    HD->t1[0] = iy;
+        1:  645:    HD->t1[1] = im;
+        1:  646:    HD->t1[2] = id;
+        1:  647:    HD->t1[3] = ih;
+        1:  648:    HD->t1[4] = imi;
+        1:  649:    HD->t1[5] = (int)sec;
+        -:  650:
+        1:  651:    if (HD->ver < 3.0)
+        1:  651-block  0
+        -:  652:    {
+    #####:  653:        fseek(fp, lastpos - ftell(fp), SEEK_CUR);
+    %%%%%:  653-block  0
+    #####:  654:        for (i = 0; i < nline; i++)
+    %%%%%:  654-block  0
+    %%%%%:  654-block  1
+        -:  655:        {
+    #####:  656:            fgets(line, LEN_STRING, fp);
+    %%%%%:  656-block  0
+        -:  657:            // get the correct cprn list
+    #####:  658:            for (j = 0; j < (MIN((nprn - 12 * i), 12)); j++)
+    %%%%%:  658-block  0
+        -:  659:            {
+    #####:  660:                substringEx(varword, line, 32 + j * 3, 3);
+    %%%%%:  660-block  0
+    #####:  661:                if (varword[0] == ' ')
+    #####:  662:                    varword[0] = 'G';
+    %%%%%:  662-block  0
+    #####:  663:                if (varword[1] == ' ')
+    %%%%%:  663-block  0
+    #####:  664:                    varword[1] = '0';
+    %%%%%:  664-block  0
+    #####:  665:                strcpy(cprn[j + i * 12], varword);
+    %%%%%:  665-block  0
+        -:  666:            }
+        -:  667:        }
+    #####:  668:        if (HD->nobstype[0] % 5 != 0)
+    %%%%%:  668-block  0
+    #####:  669:            nline = (int)(HD->nobstype[0] / 5.0) + 1;
+    %%%%%:  669-block  0
+        -:  670:        else
+    #####:  671:            nline = HD->nobstype[0] / 5;
+    %%%%%:  671-block  0
+        -:  672:        // for some observations maybe empty,so decided to split string
+    #####:  673:        for (i = 0; i < nprn; i++)
+    %%%%%:  673-block  0
+    %%%%%:  673-block  1
+    %%%%%:  673-block  2
+        -:  674:        {
+    #####:  675:            memset(obs, 0, sizeof(double) * MAXOBSTYP);
+    #####:  676:            for (j = 0; j < nline; j++)
+    %%%%%:  676-block  0
+    %%%%%:  676-block  1
+    %%%%%:  676-block  2
+        -:  677:            {
+    #####:  678:                memset(line, 0, sizeof(char) * LEN_STRING);
+    #####:  679:                fgets(line, LEN_STRING, fp);
+    %%%%%:  679-block  0
+    #####:  680:                fillobs(line, MIN((HD->nobstype[0] - j * 5), 5), 16, HD->ver);
+    #####:  681:                for (k = 0; k < (MIN((HD->nobstype[0] - j * 5), 5)); k++)
+    %%%%%:  681-block  0
+        -:  682:                {
+        -:  683:                    //	memset(varword,0,sizeof(char)*LEN_STRING);
+    #####:  684:                    substringEx(varword, line, 16 * k, 14);
+    %%%%%:  684-block  0
+    #####:  685:                    obs[k + j * 5] = atof(varword);
+        -:  686:                }
+        -:  687:            }
+    #####:  688:            isat = -1;
+    #####:  689:            if (nprn0 > 0)
+    %%%%%:  689-block  0
+    #####:  690:                isat = pointer_string(nprn0, LEN_PRN, (char *)cprn0, cprn[i]);
+    %%%%%:  690-block  0
+        -:  691:            else
+    #####:  692:                isat = i;
+    %%%%%:  692-block  0
+    #####:  693:            if (isat != -1)
+    %%%%%:  693-block  0
+        -:  694:            {
+    #####:  695:                isys = index_string(SYS, cprn[i][0]);
+    %%%%%:  695-block  0
+    #####:  696:                for (j = 0; j < nfreq[isys]; j++)
+    %%%%%:  696-block  0
+    %%%%%:  696-block  1
+        -:  697:                {
+    #####:  698:                    OB->obs[isat][MAXFREQ + j] = 0.0;
+    #####:  699:                    OB->obs[isat][j] = 0.0;
+    #####:  700:                    code[0] = 'P';
+    #####:  701:                    code[1] = freq[isys][j][1];
+    #####:  702:                    code[2] = '\0';
+    #####:  703:                    k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+    #####:  704:                                       (char *)HD->obstype[isys], code);
+    %%%%%:  704-block  0
+    #####:  705:                    if (k != -1)
+        -:  706:                    {
+    #####:  707:                        OB->obs[isat][MAXFREQ + j] = obs[k];
+    #####:  708:                        OB->fob[isat][MAXFREQ + j][0] = 'C';
+    #####:  709:                        OB->fob[isat][MAXFREQ + j][1] = freq[isys][j][1];
+    #####:  710:                        OB->fob[isat][MAXFREQ + j][2] = 'P';
+    %%%%%:  710-block  0
+        -:  711:                    }
+    #####:  712:                    if (OB->obs[isat][MAXFREQ + j] == 0)
+    %%%%%:  712-block  0
+        -:  713:                    {
+    #####:  714:                        code[0] = 'C';
+    #####:  715:                        code[1] = freq[isys][j][1];
+    #####:  716:                        code[2] = '\0';
+    #####:  717:                        k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+    #####:  718:                                           (char *)HD->obstype[isys], code);
+    %%%%%:  718-block  0
+    #####:  719:                        if (k != -1)
+        -:  720:                        {
+    #####:  721:                            OB->obs[isat][MAXFREQ + j] = obs[k];
+    #####:  722:                            OB->fob[isat][MAXFREQ + j][0] = 'C';
+    #####:  723:                            OB->fob[isat][MAXFREQ + j][1] = freq[isys][j][1];
+    #####:  724:                            OB->fob[isat][MAXFREQ + j][2] = 'C';
+    %%%%%:  724-block  0
+        -:  725:                        }
+        -:  726:                    }
+    #####:  727:                    code[0] = 'L';
+    #####:  728:                    code[1] = freq[isys][j][1];
+    #####:  729:                    code[2] = '\0';
+    #####:  730:                    k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+    #####:  731:                                       (char *)HD->obstype[isys], code);
+    %%%%%:  731-block  0
+    #####:  732:                    if (k != -1)
+        -:  733:                    {
+    #####:  734:                        OB->obs[isat][j] = obs[k];
+    #####:  735:                        OB->fob[isat][j][0] = 'L';
+    #####:  736:                        OB->fob[isat][j][1] = freq[isys][j][1];
+    #####:  737:                        OB->fob[isat][j][2] = 'P';
+    %%%%%:  737-block  0
+        -:  738:                    }
+        -:  739:                }
+    #####:  740:                count = 0;
+        -:  741:
+    #####:  742:                if (strstr(CKF.cobs, "SF") == NULL)
+    %%%%%:  742-block  0
+        -:  743:                {
+    #####:  744:                    for (k = 0; k < 2 * MAXFREQ; k++)
+    %%%%%:  744-block  0
+    %%%%%:  744-block  1
+    %%%%%:  744-block  2
+    #####:  745:                        if (OB->obs[isat][k] != 0)
+    %%%%%:  745-block  0
+    #####:  746:                            count++;
+    %%%%%:  746-block  0
+        -:  747:                    // remember to initialize obs at the end of the circulation
+    #####:  748:                    ds = ABS(OB->obs[isat][MAXFREQ] - OB->obs[isat][MAXFREQ + 1]);
+    %%%%%:  748-block  0
+    %%%%%:  748-block  1
+    %%%%%:  748-block  2
+        -:  749:                    // please be careful the therhold 50.d0, it is effeced by ionosphere
+    #####:  750:                    if (count < 4 || ds > 50)
+    %%%%%:  750-block  0
+    %%%%%:  750-block  1
+        -:  751:                    {
+    #####:  752:                        for (k = 0; k < 2 * MAXFREQ; k++)
+    %%%%%:  752-block  0
+    %%%%%:  752-block  1
+        -:  753:                        {
+    #####:  754:                            OB->obs[isat][k] = 0.0;
+    #####:  755:                            memset(OB->fob[isat][k], 0, sizeof(char) * LEN_OBSTYPE);
+    %%%%%:  755-block  0
+        -:  756:                        }
+        -:  757:                    }
+        -:  758:                }
+        -:  759:                else
+        -:  760:                {
+    #####:  761:                    if (OB->obs[isat][0] == 0 || OB->obs[isat][MAXFREQ] == 0)
+    %%%%%:  761-block  0
+    %%%%%:  761-block  1
+        -:  762:                    {
+    #####:  763:                        OB->obs[isat][0] = 0.0;
+    #####:  764:                        memset(OB->fob[isat][0], 0, sizeof(char) * LEN_OBSTYPE);
+        -:  765:
+    #####:  766:                        OB->obs[isat][MAXFREQ] = 0.0;
+    #####:  767:                        memset(OB->fob[isat][MAXFREQ], 0, sizeof(char) * LEN_OBSTYPE);
+    %%%%%:  767-block  0
+        -:  768:                    }
+        -:  769:                }
+        -:  770:            }
+        -:  771:        }
+        -:  772:    }
+        -:  773:
+        1:  774:    if (HD->ver >= 3.0)
+        1:  774-block  0
+        -:  775:    {
+        1:  776:        isat = -1;
+       25:  777:        for (i = 0; i < nprn; i++)
+        1:  777-block  0
+       24:  777-block  1
+       25:  777-block  2
+        -:  778:        {
+       24:  779:            memset(line, 0, sizeof(char) * LEN_STRING);
+       24:  780:            fgets(line, LEN_STRING, fp);
+       24:  780-block  0
+       24:  781:            isys = index_string(SYS, line[0]);
+       24:  782:            if (-1 == isys)
+    #####:  783:                continue;
+    %%%%%:  783-block  0
+       24:  784:            if (nprn0 > 0)
+       24:  784-block  0
+        -:  785:            {
+       24:  786:                if (line[1] == ' ')
+       24:  786-block  0
+    #####:  787:                    line[1] = '0';
+    %%%%%:  787-block  0
+        -:  788:                // clearstring(varword);
+       24:  789:                memset(varword, 0, sizeof(varword));
+       24:  790:                substringEx(varword, line, 0, 3);
+       24:  790-block  0
+       24:  791:                isat = pointer_string(nprn0, LEN_PRN, (char *)cprn0, varword);
+        -:  792:                // if isat equals -1 then the observations is totally disordered
+        -:  793:                // the entire program can't be runned corrected
+       24:  794:                if (isat == -1)
+       15:  795:                    continue;
+       15:  795-block  0
+        9:  796:                strcpy(cprn[isat], varword);
+        9:  796-block  0
+        -:  797:            }
+        -:  798:            else
+        -:  799:            {
+        -:  800:                // the final is the index (len-1)
+    #####:  801:                isat += 1;
+    #####:  802:                memset(varword, 0, sizeof(varword));
+    #####:  803:                substringEx(varword, line, 0, 3);
+    %%%%%:  803-block  0
+    #####:  804:                strcpy(cprn[isat], varword);
+        -:  805:            }
+        9:  806:            substringEx(varword, line, 3, strlen(line) - 3);
+        9:  806-block  0
+        9:  807:            fillobs(varword, HD->nobstype[isys], 16, HD->ver);
+        9:  808:            strcpy(line + 3, varword);
+        9:  809:            memset(obs, 0, sizeof(double) * MAXOBSTYP);
+      189:  810:            for (j = 0; j < HD->nobstype[isys]; j++)
+      189:  810-block  0
+        -:  811:            {
+      180:  812:                substringEx(varword, line, 3 + j * 16, 14);
+      180:  812-block  0
+      180:  813:                obs[j] = atof(varword);
+        -:  814:            }
+        9:  815:            if (isat != -1)
+        9:  815-block  0
+        -:  816:            {
+       27:  817:                for (j = 0; j < nfreq[isys]; j++)
+        9:  817-block  0
+       18:  817-block  1
+       27:  817-block  2
+        -:  818:                {
+       18:  819:                    OB->obs[isat][MAXFREQ + j] = 0.0;
+       18:  820:                    OB->obs[isat][j] = 0.0;
+        -:  821:                    // remember to initialize the HD->usetype
+       18:  822:                    if (!OB->lstored[isys][j])
+       18:  822-block  0
+        -:  823:                    {
+        -:  824:                        // because of the \0
+        4:  825:                        for (iobs = 0; iobs < strlen(OBSTYPE); iobs++)
+        2:  825-block  0
+        2:  825-block  1
+        4:  825-block  2
+        -:  826:                        {
+        4:  827:                            code[0] = 'C';
+        4:  828:                            code[1] = freq[isys][j][1];
+        4:  829:                            code[2] = OBSTYPE[iobs];
+        4:  830:                            code[3] = '\0';
+        4:  831:                            k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+        4:  832:                                               (char *)HD->obstype[isys], code);
+        4:  832-block  0
+        4:  833:                            if (k != -1)
+        -:  834:                            {
+        2:  835:                                if (fabs(obs[k]) > 1.0)
+        2:  835-block  0
+        -:  836:                                {
+        2:  837:                                    OB->obs[isat][MAXFREQ + j] = obs[k];
+        2:  838:                                    strcpy(OB->fob[isat][MAXFREQ + j],
+        2:  838-block  0
+        -:  839:                                           code);
+        -:  840:                                }
+        -:  841:                            }
+        4:  842:                            code[0] = 'L';
+        4:  843:                            code[1] = freq[isys][j][1];
+        4:  844:                            code[2] = OBSTYPE[iobs];
+        4:  845:                            code[3] = '\0';
+        4:  846:                            k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+        4:  847:                                               (char *)HD->obstype[isys], code);
+        4:  847-block  0
+        4:  848:                            if (k != -1)
+        -:  849:                            {
+        2:  850:                                if (fabs(obs[k]) > 1.0)
+        2:  850-block  0
+        -:  851:                                {
+        2:  852:                                    OB->obs[isat][j] = obs[k];
+        2:  853:                                    strcpy(OB->fob[isat][j], code);
+        2:  853-block  0
+        -:  854:                                }
+        -:  855:                            }
+        4:  856:                            if (OB->obs[isat][j] != 0 && OB->obs[isat][MAXFREQ + j] != 0)
+        4:  856-block  0
+        2:  856-block  1
+        2:  857:                                break;
+        2:  857-block  0
+        -:  858:                        }
+        2:  859:                        if (iobs < strlen(OBSTYPE))
+        2:  859-block  0
+        -:  860:                        {
+        2:  861:                            HD->usetype[isys][j] = OBSTYPE[iobs];
+        2:  862:                            OB->lstored[isys][j] = true;
+        2:  862-block  0
+        -:  863:                        }
+        -:  864:                    }
+        -:  865:                    else
+        -:  866:                    {
+        -:  867:
+       16:  868:                        code[0] = 'C';
+       16:  869:                        code[1] = freq[isys][j][1];
+       16:  870:                        code[2] = HD->usetype[isys][j];
+       16:  871:                        code[3] = '\0';
+       16:  872:                        k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+       16:  873:                                           (char *)HD->obstype[isys], code);
+       16:  873-block  0
+       16:  874:                        if (k != -1)
+        -:  875:                        {
+       16:  876:                            if (fabs(obs[k]) > 1.0)
+       16:  876-block  0
+        -:  877:                            {
+       16:  878:                                OB->obs[isat][MAXFREQ + j] = obs[k];
+       16:  879:                                strcpy(OB->fob[isat][MAXFREQ + j], code);
+       16:  879-block  0
+        -:  880:                            }
+        -:  881:                        }
+       16:  882:                        code[0] = 'L';
+       16:  883:                        code[1] = freq[isys][j][1];
+       16:  884:                        code[2] = HD->usetype[isys][j];
+       16:  885:                        code[3] = '\0';
+       16:  886:                        k = pointer_string(HD->nobstype[isys], LEN_OBSTYPE,
+       16:  887:                                           (char *)HD->obstype[isys], code);
+       16:  887-block  0
+       16:  888:                        if (k != -1)
+        -:  889:                        {
+       16:  890:                            if (fabs(obs[k]) > 1.0)
+       16:  890-block  0
+        -:  891:                            {
+       16:  892:                                OB->obs[isat][j] = obs[k];
+       16:  893:                                strcpy(OB->fob[isat][j], code);
+       16:  893-block  0
+        -:  894:                            }
+        -:  895:                        }
+        -:  896:                    }
+        -:  897:                }
+        9:  898:                count = 0;
+        9:  899:                if (strstr(CKF.cobs, "SF") == NULL)
+        9:  899-block  0
+        -:  900:                {
+    #####:  901:                    for (k = 0; k < 2 * MAXFREQ; k++)
+    %%%%%:  901-block  0
+    %%%%%:  901-block  1
+    %%%%%:  901-block  2
+    #####:  902:                        if (OB->obs[isat][k] != 0)
+    %%%%%:  902-block  0
+    #####:  903:                            count++;
+    %%%%%:  903-block  0
+        -:  904:                    // remember to initialize obs at the end of the circulation
+    #####:  905:                    ds = ABS(OB->obs[isat][MAXFREQ] - OB->obs[isat][MAXFREQ + 1]);
+    %%%%%:  905-block  0
+    %%%%%:  905-block  1
+    %%%%%:  905-block  2
+        -:  906:                    // please be careful the therhold 50.d0, it is effeced by ionosphere
+    #####:  907:                    if (count < 4 || ds > 50)
+    %%%%%:  907-block  0
+    %%%%%:  907-block  1
+        -:  908:                    {
+    #####:  909:                        for (k = 0; k < 2 * MAXFREQ; k++)
+    %%%%%:  909-block  0
+    %%%%%:  909-block  1
+        -:  910:                        {
+    #####:  911:                            OB->obs[isat][k] = 0.0;
+    #####:  912:                            memset(OB->fob[isat][k], 0, sizeof(char) * LEN_OBSTYPE);
+    %%%%%:  912-block  0
+        -:  913:                        }
+        -:  914:                    }
+        -:  915:                }
+        -:  916:                else
+        -:  917:                {
+        9:  918:                    if (OB->obs[isat][0] == 0 || OB->obs[isat][MAXFREQ + 0] == 0)
+        9:  918-block  0
+        9:  918-block  1
+        -:  919:                    {
+    #####:  920:                        OB->obs[isat][0] = 0.0;
+    #####:  921:                        memset(OB->fob[isat][0], 0, sizeof(char) * LEN_OBSTYPE);
+        -:  922:
+    #####:  923:                        OB->obs[isat][MAXFREQ] = 0.0;
+    #####:  924:                        memset(OB->fob[isat][MAXFREQ], 0, sizeof(char) * LEN_OBSTYPE);
+    %%%%%:  924-block  0
+        -:  925:                    }
+        -:  926:                }
+        -:  927:            }
+        -:  928:        }
+        -:  929:    }
+        1:  930:    if (nprn0 == 0)
+        1:  930-block  0
+        -:  931:    {
+    #####:  932:        OB->nprn = nprn;
+    #####:  933:        for (i = 0; i < nprn; i++)
+    %%%%%:  933-block  0
+    %%%%%:  933-block  1
+    #####:  934:            strcpy(OB->cprn[i], cprn[i]);
+    %%%%%:  934-block  0
+        -:  935:    }
+        -:  936:    else
+        -:  937:    {
+        1:  938:        OB->nprn = nprn0;
+       33:  939:        for (i = 0; i < nprn0; i++)
+        1:  939-block  0
+       33:  939-block  1
+       32:  940:            strcpy(OB->cprn[i], cprn0[i]);
+       32:  940-block  0
+        -:  941:    }
+        -:  942:}
+        -:  943:
+        1:  944:void read_rnxobs_head(RNXHEAD *HD, FILE *fp)
+        -:  945:{
+        -:  946:    int i, j, id, lastpos;
+        1:  947:    char line[LEN_STRING] = {'\0'};
+        -:  948:    char keyword[LEN_STRING];
+        -:  949:    char varword[LEN_STRING];
+        1:  950:    HD->nsys = 0;
+        1:  951:    memset(HD->nobstype, 0, sizeof(HD->nobstype));
+        1:  952:    memset(HD->obstype, 0, sizeof(HD->obstype));
+        1:  952-block  0
+        -:  953:
+        -:  954:    while (true)
+        -:  955:    {
+      258:  956:        lastpos = ftell(fp);
+      258:  956-block  0
+      258:  957:        fgets(line, LEN_STRING, fp);
+      258:  958:        substringEx(keyword, line, 60, strlen(line) - 60);
+      258:  959:        if (strstr(keyword, "END OF HEADER") != NULL) //strstr()未找到子字符串返回NULL
+        1:  960:            return;
+        1:  960-block  0
+        1:  960-block  1
+     257*:  961:        if ((strstr(keyword, "END OF HEADER") != NULL && HD->ver >= 2.0) || (len_trim(keyword) == 0 && HD->ver < 2.0))
+      257:  961-block  0
+    %%%%%:  961-block  1
+      257:  961-block  2
+    %%%%%:  961-block  3
+    #####:  962:            return;
+    %%%%%:  962-block  0
+        -:  963:
+      257:  964:        if (strstr(keyword, "RINEX VERSION") != NULL)
+      257:  964-block  0
+        -:  965:        {
+        -:  966:            //版本号
+        1:  967:            substringEx(varword, line, 0, 9);
+        1:  967-block  0
+        1:  968:            HD->ver = atof(varword);
+        -:  969:
+        -:  970:            //导航电文类型
+        1:  971:            substringEx(varword, line, 40, 1);
+        1:  972:            HD->sys[0] = varword[0];
+        1:  973:            HD->sys[1] = '\0';
+        -:  974:
+        1:  975:            if (HD->sys[0] == ' ')
+    #####:  976:                HD->sys[0] = 'G'; //缺省为GPS
+    %%%%%:  976-block  0
+        1:  977:            if (HD->ver < 1.0 || HD->ver > 4.0)
+        1:  977-block  0
+        1:  977-block  1
+    #####:  978:                printf("read rinex version error!\n");
+    %%%%%:  978-block  0
+        -:  979:        }
+      256:  980:        else if (strstr(keyword, "COMMENT") != NULL)
+      256:  980-block  0
+        1:  981:            continue;
+        1:  981-block  0
+      255:  982:        else if (strstr(keyword, "MARKER NAME") != NULL)
+      255:  982-block  0
+        -:  983:        {
+        1:  984:            substringEx(varword, line, 0, 4);
+        1:  984-block  0
+        1:  985:            strncpy(HD->mark, varword, 4);
+        -:  986:        }
+      254:  987:        else if (strstr(keyword, "REC #") != NULL)
+      254:  987-block  0
+        -:  988:        {
+        -:  989:
+        1:  990:            substringEx(varword, line, 0, 20);
+        1:  990-block  0
+        1:  991:            strncpy(HD->recnum, varword, 20);
+        1:  992:            substringEx(varword, line, 20, 20);
+        1:  993:            strncpy(HD->rectype, varword, 20);
+        -:  994:        }
+      253:  995:        else if (strstr(keyword, "ANT #") != NULL)
+      253:  995-block  0
+        -:  996:        {
+        1:  997:            substringEx(varword, line, 0, 20);
+        1:  997-block  0
+        1:  998:            strncpy(HD->antnum, varword, 20);
+        1:  999:            substringEx(varword, line, 20, 20);
+        1: 1000:            strncpy(HD->anttype, varword, 20);
+        -: 1001:        }
+      252: 1002:        else if (strstr(keyword, "APPROX POSITION") != NULL)
+      252: 1002-block  0
+        -: 1003:        {
+        1: 1004:            sscanf(line, "%lf%lf%lf", &HD->x, &HD->y, &HD->z);
+        1: 1004-block  0
+        -: 1005:        }
+      251: 1006:        else if (strstr(keyword, "ANTENNA: DELTA") != NULL)
+      251: 1006-block  0
+        -: 1007:        {
+        1: 1008:            sscanf(line, "%lf%lf%lf", &HD->h, &HD->e, &HD->n);
+        1: 1008-block  0
+        -: 1009:        }
+      250: 1010:        else if (strstr(keyword, "WAVELENGTH FACT") != NULL)
+      250: 1010-block  0
+        -: 1011:        {
+        -: 1012:        }
+      249: 1013:        else if (strstr(keyword, "SYS / # / OBS TYPES") != NULL)
+      249: 1013-block  0
+        -: 1014:        {
+        3: 1015:            id = index_string(SYS, line[0]);
+        3: 1015-block  0
+        3: 1016:            if (-1 == id)
+    #####: 1017:                continue;
+    %%%%%: 1017-block  0
+        3: 1018:            substringEx(varword, line, 3, 3);
+        3: 1018-block  0
+        3: 1019:            HD->nobstype[id] = atoi(varword);
+        3: 1020:            int nline = 0;
+        3: 1021:            if (HD->nobstype[id] % 13 != 0)
+        3: 1022:                nline = (int)(HD->nobstype[id] / 13) + 1;
+        3: 1022-block  0
+        -: 1023:            else
+    #####: 1024:                nline = (int)(HD->nobstype[id] / 13);
+    %%%%%: 1024-block  0
+        -: 1025:            //maybe can use fseek
+        3: 1026:            fseek(fp, lastpos - ftell(fp), SEEK_CUR);
+        3: 1026-block  0
+        9: 1027:            for (j = 0; j < nline; j++)
+        6: 1027-block  0
+        9: 1027-block  1
+        -: 1028:            {
+        6: 1029:                memset(line, 0, sizeof(line));
+        6: 1030:                fgets(line, LEN_STRING, fp);
+        6: 1030-block  0
+        -: 1031:
+       62: 1032:                for (i = 0; i < (MIN((HD->nobstype[id] - 13 * j), 13)); i++)
+       62: 1032-block  0
+        -: 1033:                {
+       56: 1034:                    substringEx(varword, line, 7 + i * 4, 3);
+       56: 1034-block  0
+       56: 1035:                    strcpy(HD->obstype[id][i + 13 * j], varword);
+        -: 1036:                }
+        -: 1037:            }
+       97: 1038:            for (i = HD->nobstype[id]; i < MAXOBSTYP; i++)
+        3: 1038-block  0
+       97: 1038-block  1
+       94: 1039:                HD->obstype[id][i][0] = '\0';
+       94: 1039-block  0
+        -: 1040:        }
+      246: 1041:        else if (strstr(keyword, "TYPES OF OBSERV") != NULL)
+      246: 1041-block  0
+        -: 1042:        {
+        -: 1043:
+    #####: 1044:            substringEx(varword, line, 0, 6);
+    %%%%%: 1044-block  0
+    #####: 1045:            HD->nobstype[0] = atoi(varword);
+        -: 1046:
+    #####: 1047:            if (HD->nobstype[0] == 0)
+    #####: 1048:                continue;
+    %%%%%: 1048-block  0
+    #####: 1049:            int nline = 0;
+    #####: 1050:            if (HD->nobstype[0] % 9 != 0)
+    %%%%%: 1050-block  0
+    #####: 1051:                nline = (int)(HD->nobstype[0] / 9) + 1;
+    %%%%%: 1051-block  0
+        -: 1052:            else
+    #####: 1053:                nline = (int)(HD->nobstype[0] / 9);
+    %%%%%: 1053-block  0
+        -: 1054:
+    #####: 1055:            fseek(fp, lastpos - ftell(fp), SEEK_CUR);
+    %%%%%: 1055-block  0
+    #####: 1056:            for (j = 0; j < nline; j++)
+    %%%%%: 1056-block  0
+    %%%%%: 1056-block  1
+        -: 1057:            {
+    #####: 1058:                memset(line, 0, sizeof(line));
+    #####: 1059:                fgets(line, LEN_STRING, fp);
+    %%%%%: 1059-block  0
+    #####: 1060:                for (i = 0; i < (MIN((HD->nobstype[0] - 9 * j), 9)); i++)
+    %%%%%: 1060-block  0
+        -: 1061:                {
+    #####: 1062:                    substringEx(varword, line, 6 + 6 * i, 6);
+    %%%%%: 1062-block  0
+    #####: 1063:                    strcpy(HD->obstype[0][i + 9 * j], left_justify_string(varword));
+        -: 1064:                }
+        -: 1065:            }
+    #####: 1066:            for (i = HD->nobstype[0]; i < MAXOBSTYP; i++)
+    %%%%%: 1066-block  0
+    %%%%%: 1066-block  1
+    #####: 1067:                HD->obstype[0][i][0] = '\0';
+    %%%%%: 1067-block  0
+        -: 1068:
+    #####: 1069:            for (i = 1; i < MAXSYS; i++)
+    %%%%%: 1069-block  0
+    %%%%%: 1069-block  1
+    %%%%%: 1069-block  2
+        -: 1070:            {
+    #####: 1071:                HD->nobstype[i] = HD->nobstype[0];
+    #####: 1072:                for (j = 0; j < HD->nobstype[0]; j++)
+    %%%%%: 1072-block  0
+    %%%%%: 1072-block  1
+    #####: 1073:                    strcpy(HD->obstype[i][j], HD->obstype[0][j]);
+    %%%%%: 1073-block  0
+        -: 1074:            }
+        -: 1075:
+        -: 1076:            //for whu's tracking stations,the C1 is C2,C2 is C7
+    #####: 1077:            id = index_string(SYS, 'C');
+    %%%%%: 1077-block  0
+    #####: 1078:            if (-1 != id)
+        -: 1079:            {
+    #####: 1080:                for (i = 0; i < HD->nobstype[id]; i++)
+    %%%%%: 1080-block  0
+    %%%%%: 1080-block  1
+    %%%%%: 1080-block  2
+        -: 1081:                {
+    #####: 1082:                    if ('2' == HD->obstype[id][i][1])
+    %%%%%: 1082-block  0
+    #####: 1083:                        HD->obstype[id][i][1] = '7';
+    %%%%%: 1083-block  0
+    #####: 1084:                    if ('1' == HD->obstype[id][i][1])
+    %%%%%: 1084-block  0
+    #####: 1085:                        HD->obstype[id][i][1] = '2';
+    %%%%%: 1085-block  0
+        -: 1086:                }
+        -: 1087:            }
+        -: 1088:        }
+      246: 1089:        else if (strstr(keyword, "INTERVAL") != NULL)
+      246: 1089-block  0
+        -: 1090:        {
+        1: 1091:            substringEx(varword, line, 0, 16);
+        1: 1091-block  0
+        1: 1092:            HD->intv = atof(varword);
+        -: 1093:        }
+      245: 1094:        else if (strstr(keyword, "TIME OF FIRST OBS") != NULL)
+      245: 1094-block  0
+        -: 1095:        {
+        -: 1096:            double sec;
+        1: 1097:            char tmetag[256] = {0};
+        1: 1098:            sscanf(line, "%d%d%d%d%d%lf%s", HD->t0, HD->t0 + 1, HD->t0 + 2, HD->t0 + 3,
+        1: 1099:                   HD->t0 + 4, &sec, tmetag);
+        1: 1100:            HD->t0[5] = (int)sec;
+        1: 1100-block  0
+        -: 1101:        }
+      244: 1102:        else if (strstr(keyword, "TIME OF LAST OBS") != NULL)
+      244: 1102-block  0
+        -: 1103:        {
+        6: 1104:            for (i = 0; i < 5; i++)
+        1: 1104-block  0
+        6: 1104-block  1
+        -: 1105:            {
+        5: 1106:                substringEx(varword, line, 0 + i * 6, 6);
+        5: 1106-block  0
+        5: 1107:                HD->t1[i] = atoi(varword);
+        -: 1108:            }
+        1: 1109:            substringEx(varword, line, 30, 13);
+        1: 1109-block  0
+        1: 1110:            HD->t1[5] = (int)atof(varword);
+        -: 1111:        }
+      256: 1112:        memset(line, 0, sizeof(line));
+      256: 1112-block  0
+        -: 1113:    }
+        -: 1114:    if (HD->ver >= 3.0)
+        -: 1115:    {
+        -: 1116:        for (i = 0; i < MAXSYS; i++)
+        -: 1117:            if (HD->nobstype[i] != 0)
+        -: 1118:                HD->nsys++;
+        -: 1119:    }
+        -: 1120:}
