@@ -44,4 +44,6 @@ static const double gpst0[]={1980,1,6,0,0,0}; //GPS
 static const double gst0[]={1999,8,22,0,0,0};   //GALILEO
 static const double bdt0[]={2006,1,1,0,0,0};    //BEIDOU
 
+
+gtime_t epoch2time(const double *ep);
 #endif /* GLOBAL_H_ */

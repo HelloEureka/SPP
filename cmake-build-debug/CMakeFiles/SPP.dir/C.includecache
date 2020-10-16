@@ -6,6 +6,8 @@
 
 #IncludeRegexTransform: 
 
+/media/eureka/eureka/GNSS Algorithm/SPP/Adjust.m
+
 /media/eureka/eureka/GNSS Algorithm/SPP/CMat.c
 math.h
 -
@@ -17,6 +19,58 @@ CMat.h
 /media/eureka/eureka/GNSS Algorithm/SPP/CMat.h
 
 /media/eureka/eureka/GNSS Algorithm/SPP/CMat.h
+stdio.h
+-
+math.h
+-
+
+/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c
+SPPAlgorithm.h
+/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.h
+
+/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.h
+CMat.h
+/media/eureka/eureka/GNSS Algorithm/SPP/CMat.h
+SatPos.h
+/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.h
+
+/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+rnx.h
+/media/eureka/eureka/GNSS Algorithm/SPP/rnx.h
+global.h
+/media/eureka/eureka/GNSS Algorithm/SPP/global.h
+math.h
+-
+
+/media/eureka/eureka/GNSS Algorithm/SPP/global.h
+rnx.h
+/media/eureka/eureka/GNSS Algorithm/SPP/rnx.h
+time.h
+-
+
+/media/eureka/eureka/GNSS Algorithm/SPP/main.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+CMat.h
+/media/eureka/eureka/GNSS Algorithm/SPP/CMat.h
+rnx.h
+/media/eureka/eureka/GNSS Algorithm/SPP/rnx.h
+global.h
+/media/eureka/eureka/GNSS Algorithm/SPP/global.h
+SPPAlgorithm.h
+/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.h
+
+/media/eureka/eureka/GNSS Algorithm/SPP/rnx.h
 stdio.h
 -
 

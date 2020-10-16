@@ -99,12 +99,3 @@ void elevazel(Coord *sat, Coord *rec, double *azel) {
     azel[0] = atan2(dump[0], dump[1]);
     azel[1] = atan(dump[2] / sqrt(dump[0] * dump[0] + dump[1] * dump[1]));
 }
-
-int azel_demo() {
-    double azel[2];
-    Coord rr= {-2341333.112, -3539049.520, 4745791.248};
-    Coord rs = {-3425190.629, -17360562.979, 20466189.117};
-    elevazel(&rs, &rr, azel);
-
-    printf("azim:%9.3lf elev %9.3lf\n", azel[0] * RAD2DEG, azel[1] * RAD2DEG);
-}

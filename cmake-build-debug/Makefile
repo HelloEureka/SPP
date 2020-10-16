@@ -170,6 +170,33 @@ CMat.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/CMat.c.s
 .PHONY : CMat.c.s
 
+SPPAlgorithm.o: SPPAlgorithm.c.o
+
+.PHONY : SPPAlgorithm.o
+
+# target to build an object file
+SPPAlgorithm.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SPPAlgorithm.c.o
+.PHONY : SPPAlgorithm.c.o
+
+SPPAlgorithm.i: SPPAlgorithm.c.i
+
+.PHONY : SPPAlgorithm.i
+
+# target to preprocess a source file
+SPPAlgorithm.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SPPAlgorithm.c.i
+.PHONY : SPPAlgorithm.c.i
+
+SPPAlgorithm.s: SPPAlgorithm.c.s
+
+.PHONY : SPPAlgorithm.s
+
+# target to generate assembly for a file
+SPPAlgorithm.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SPPAlgorithm.c.s
+.PHONY : SPPAlgorithm.c.s
+
 SatPos.o: SatPos.c.o
 
 .PHONY : SatPos.o
@@ -197,6 +224,33 @@ SatPos.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/SatPos.c.s
 .PHONY : SatPos.c.s
 
+azel.o: azel.c.o
+
+.PHONY : azel.o
+
+# target to build an object file
+azel.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/azel.c.o
+.PHONY : azel.c.o
+
+azel.i: azel.c.i
+
+.PHONY : azel.i
+
+# target to preprocess a source file
+azel.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/azel.c.i
+.PHONY : azel.c.i
+
+azel.s: azel.c.s
+
+.PHONY : azel.s
+
+# target to generate assembly for a file
+azel.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/azel.c.s
+.PHONY : azel.c.s
+
 com.o: com.c.o
 
 .PHONY : com.o
@@ -223,6 +277,33 @@ com.s: com.c.s
 com.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/com.c.s
 .PHONY : com.c.s
+
+iono.o: iono.c.o
+
+.PHONY : iono.o
+
+# target to build an object file
+iono.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/iono.c.o
+.PHONY : iono.c.o
+
+iono.i: iono.c.i
+
+.PHONY : iono.i
+
+# target to preprocess a source file
+iono.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/iono.c.i
+.PHONY : iono.c.i
+
+iono.s: iono.c.s
+
+.PHONY : iono.s
+
+# target to generate assembly for a file
+iono.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/iono.c.s
+.PHONY : iono.c.s
 
 main.o: main.c.o
 
@@ -278,6 +359,60 @@ rnx.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/rnx.c.s
 .PHONY : rnx.c.s
 
+time.o: time.c.o
+
+.PHONY : time.o
+
+# target to build an object file
+time.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/time.c.o
+.PHONY : time.c.o
+
+time.i: time.c.i
+
+.PHONY : time.i
+
+# target to preprocess a source file
+time.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/time.c.i
+.PHONY : time.c.i
+
+time.s: time.c.s
+
+.PHONY : time.s
+
+# target to generate assembly for a file
+time.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/time.c.s
+.PHONY : time.c.s
+
+trop.o: trop.c.o
+
+.PHONY : trop.o
+
+# target to build an object file
+trop.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/trop.c.o
+.PHONY : trop.c.o
+
+trop.i: trop.c.i
+
+.PHONY : trop.i
+
+# target to preprocess a source file
+trop.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/trop.c.i
+.PHONY : trop.c.i
+
+trop.s: trop.c.s
+
+.PHONY : trop.s
+
+# target to generate assembly for a file
+trop.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/SPP.dir/build.make CMakeFiles/SPP.dir/trop.c.s
+.PHONY : trop.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -290,18 +425,33 @@ help:
 	@echo "... CMat.o"
 	@echo "... CMat.i"
 	@echo "... CMat.s"
+	@echo "... SPPAlgorithm.o"
+	@echo "... SPPAlgorithm.i"
+	@echo "... SPPAlgorithm.s"
 	@echo "... SatPos.o"
 	@echo "... SatPos.i"
 	@echo "... SatPos.s"
+	@echo "... azel.o"
+	@echo "... azel.i"
+	@echo "... azel.s"
 	@echo "... com.o"
 	@echo "... com.i"
 	@echo "... com.s"
+	@echo "... iono.o"
+	@echo "... iono.i"
+	@echo "... iono.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
 	@echo "... rnx.o"
 	@echo "... rnx.i"
 	@echo "... rnx.s"
+	@echo "... time.o"
+	@echo "... time.i"
+	@echo "... time.s"
+	@echo "... trop.o"
+	@echo "... trop.i"
+	@echo "... trop.s"
 .PHONY : help
 
 

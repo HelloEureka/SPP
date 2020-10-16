@@ -1,5 +1,6 @@
 #include "global.h"
 #include <math.h>
+#include "SatPos.h"
 /* ionosphere model ------------------------------------------------------------
 * compute ionospheric delay by broadcast ionosphere model (klobuchar model)
 * args   : gtime_t t        I   time (gpst)
@@ -20,7 +21,7 @@ double norm(const double *a,int n)
 }
 
 
-extern double ionmodel(gtime_t t, const double *ion, const double *pos,
+double ionmodel(gtime_t t, const double *ion, const double *pos,
                        const double *azel)
 {
     const double ion_default[]={ /* 2004/1/1 */
@@ -46,6 +47,7 @@ extern double ionmodel(gtime_t t, const double *ion, const double *pos,
     phi+=0.064*cos((lam-1.617)*PI);
 
     /* local time (s) */
+    double a = time2gpst(t, &week);
     tt=43200.0*lam + time2gpst(t, &week);
     tt-=floor(tt/86400.0)*86400.0; /* 0<=tt<86400 */
     

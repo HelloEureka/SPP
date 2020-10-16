@@ -7,4 +7,6 @@ LINK_LIBRARIES(m)
 #set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_C_STANDARD 11)
 
-add_executable(SPP main.c com.c SatPos.c CMat.c rnx.c azel.c time.c trop.c iono.c)
+AUX_SOURCE_DIRECTORY(. SRC_LIST)
+
+add_executable(SPP ${SRC_LIST})

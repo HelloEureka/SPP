@@ -26,9 +26,6 @@ double SatPos_CorrRelative(Coord *satPos, Coord *satPos_v);
 double Dist(Coord *p1, Coord *p2);
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
 
 
 
@@ -46,3 +43,8 @@ void elevazel(Coord *sat, Coord *rec, double *azel);
 int azel_demo();
 
 double SatClk(GPS_BRDEPH *gps_brd, double t0);
+
+
+
+double ionmodel(gtime_t t, const double *ion, const double *pos,
+                const double *azel);

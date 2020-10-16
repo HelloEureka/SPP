@@ -21,14 +21,20 @@ double *mat(int n, int m) {
     return p;
 }
 
-int *imat(int n, int m) {
-    int *p;
-    if (n <= 0 || m <= 0)
+static int *imat(int n, int m) {
+    int *p = NULL;
+    if (m < 0 || n < 0) {
+        printf("***ERROR(mat):cant be zero!\n");
         return NULL;
-    if (!(p = (int *) malloc(sizeof(int) * n * m))) {
+    }
+    p = (int *) malloc(m * n * sizeof(int));
+    if (!p) {
         printf("***ERROR(mat):allocate error!\n");
         return NULL;
     }
+    memset(p, 0, sizeof(int) * m * n);
+    for (int i = 0; i < m * n - 1; i++)
+        p[i] = 0;
     return p;
 }
 
@@ -113,7 +119,6 @@ void lubksb(const double *A, int n, const int *indx, double *b) {
 }
 
 int CMat_Inverse(double *A, int lda, int n) {
-
     double d, *B;
     int i, j, *indx;
     indx = imat(n, 1);
@@ -132,41 +137,70 @@ int CMat_Inverse(double *A, int lda, int n) {
     }
     free(indx);
     free(B);
-    return 0;
+    return 1;
 }
 
-void CMat_Matmul(const char *tr, int m, int n, int k, double alpha, double *a, int lda, double *b, int ldb, double beta,
-                 double *c, int ldc) {
+void CMat_Matmul(const char *tr, int m, int n, int k, double alpha, double *a, double *b, double beta, double *c) {
+//tr="NN"void CMat_Matmul(const char *tr, int m, int n, int k, double alpha, double *a, double *b,  double beta,
+//                 double *c)
+//m, nres
+//k left col
+//alpha 1.0
+//lda a row
+//ldb b row
+//beta 0
+//c res
+    int lda = m;
+    int ldb = k;
+    int ldc = m;
     double d;
     int i, j, x;
     int opr = tr[0] == 'N' ? (tr[1] == 'N' ? 1 : 2) : (tr[1] == 'N' ? 3 : 4);
-    for (i = 0; i < m; i++) {
-        for (j = 0; j < n; j++) {
+    for (i = 0;i < m;i++) {
+        for (j = 0;j < n;j++) {
             d = 0;
             switch (opr) {
                 case 1:
-                    for (x = 0; x < k; x++)
-                        d += a[lda * x + i] * b[ldb * j + x];
+                    for (x = 0;x < k;x++)
+                        d += a[lda * x+ i] * b[ldb * j+ x];
                     break;
                 case 2:
-                    for (x = 0; x < k; x++)
-                        d += a[lda * x + i] * b[ldb * x + j];
+                    for (x = 0;x < k;x++)
+                        d += a[lda * x+ i] * b[ldb * x+ j];
                     break;
                 case 3:
-                    for (x = 0; x < k; x++)
-                        d += a[lda * i + x] * b[ldb * j + x];
+                    for (x = 0;x < k;x++)
+                        d += a[lda * i+ x] * b[ldb * j+ x];
                     break;
                 case 4:
-                    for (x = 0; x < k; x++)
-                        d += a[lda * i + x] * b[ldb * x + j];
+                    for (x = 0;x < k;x++)
+                        d += a[lda * i+ x] * b[ldb * x+ j];
                     break;
             }
-            c[ldc * j + i] = alpha * d + beta * c[ldc * j + i];
+            c[ldc * j+ i] =alpha * d+beta * c[ldc * j + i];
         }
     }
 }
 
-void CMat_PrintMatrix(double *mat, int lda, int row, int col, const char *premsg) {
+
+
+void CMat_Multiply(double *left, double *right, double *res, int row, int mid, int col)
+{
+    int i, j, k;
+    for (i = 0; i < row; i++)
+        for (j = 0; j < col; j++)
+        {
+            res[i+j*row] = 0.0;
+            for (k = 0; k < mid; k++)
+            {
+                if (left[i+k*row] != 0 && right[k+j*mid] != 0)
+                    res[i+j*row] += left[i+k*row] * right[k+j*mid];
+            }
+        }
+}
+
+
+void CMat_PrintMatrix(double *mat, int row, int col, const char *premsg) {
     if (row < 0 || col < 0) {
         printf("***print_matrix wrong input arguments for the row and col ***\n");
         return;
@@ -177,9 +211,19 @@ void CMat_PrintMatrix(double *mat, int lda, int row, int col, const char *premsg
     }
     for (i = 0; i < row; i++) {
         for (j = 0; j < col; j++) {
-            printf("%13.7lf ", mat[i + j * lda]);
+            printf("%13.7lf ", mat[i + j * row]);
         }
         printf("\n");
+    }
+}
+
+void CMat_Transpose(double *A, int row, int col) {
+    double *ACopy = mat(row, col);
+    CMat_Copy(ACopy, A, col, row);
+    for (int i = 0; i < row; i++) {
+        for (int j = 0; j < col; j++) {
+            A[j + i * col] = ACopy[i + j * row];
+        }
     }
 }
 
@@ -188,17 +232,43 @@ void demo() {
     // matrix is column major
     double norm[3 * 3] = {1, 2, 3, 6, 3, 5, 4, 8, 9};
     double A[3] = {4, 5, 6}, L[3];
-    CMat_Matmul("NN", 3, 1, 3, 1.0, norm, 3, A, 3, 0.0, L, 3);
+    CMat_Matmul("NN", 3, 1, 3, 1.0, norm, A, 0.0, L);
     printf("norm(3*3) * A(3*1) = L(3*1)\n");
-    CMat_PrintMatrix(norm, 3, 3, 3, "norm");
-    CMat_PrintMatrix(A, 3, 3, 1, "A");
-    CMat_PrintMatrix(L, 3, 3, 1, "L");
+    CMat_PrintMatrix(norm, 3, 3, "norm");
+    CMat_PrintMatrix(A, 3, 1, "A");
+    CMat_PrintMatrix(L, 3, 1, "L");
 
-    int status = CMat_Inverse(norm, 3, 3);
-    if (status == -1) {
-        printf("Singular matrix of norm\n");
-        exit(1);
-    }
+    double normCopy[3 * 3];
+    CMat_Copy(&normCopy, &norm, 3, 3);
+
+    CMat_Inverse(norm, 3, 3);
     printf("inverse of norm(3*3) is :\n");
-    CMat_PrintMatrix(norm, 3, 3, 3, "norm");
+    CMat_PrintMatrix(norm, 3, 3, "norm");
+    CMat_Transpose(norm, 3, 3);
+    CMat_PrintMatrix(normCopy, 3, 3, "T");
 }
+
+void CMat_Copy(double *des, double *src, int col, int row) {
+    int len = col * row;
+    for (int i = 0; i < len; ++i) {
+        des[i] = src[i];
+    }
+}
+
+
+double Mat_Norm(double *A, int len) {
+    double res = 0.0;
+    for (int i = 0; i < len; i++)
+        res += A[i] * A[i];
+    return sqrt(res);
+}
+
+void Mat_Add(double *A, double *B, int row, int col) {
+    int len = row * col;
+    for (int i = 0; i < len; i++) {
+        A[i] += B[i];
+    }
+}
+
+
+

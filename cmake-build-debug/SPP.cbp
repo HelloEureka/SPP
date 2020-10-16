@@ -88,13 +88,25 @@
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/CMat.h">
 			<Option target="SPP"/>
 		</Unit>
+		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.c">
+			<Option target="SPP"/>
+		</Unit>
+		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/SPPAlgorithm.h">
+			<Option target="SPP"/>
+		</Unit>
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.c">
 			<Option target="SPP"/>
 		</Unit>
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/SatPos.h">
 			<Option target="SPP"/>
 		</Unit>
+		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/azel.c">
+			<Option target="SPP"/>
+		</Unit>
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/com.c">
+			<Option target="SPP"/>
+		</Unit>
+		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/iono.c">
 			<Option target="SPP"/>
 		</Unit>
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/main.c">
@@ -104,6 +116,12 @@
 			<Option target="SPP"/>
 		</Unit>
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/rnx.h">
+			<Option target="SPP"/>
+		</Unit>
+		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/time.c">
+			<Option target="SPP"/>
+		</Unit>
+		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/trop.c">
 			<Option target="SPP"/>
 		</Unit>
 		<Unit filename="/media/eureka/eureka/GNSS Algorithm/SPP/CMakeLists.txt">
