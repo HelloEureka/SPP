@@ -46,4 +46,7 @@ static const double bdt0[]={2006,1,1,0,0,0};    //BEIDOU
 
 
 gtime_t epoch2time(const double *ep);
+gtime_t gpst2time(int week, double sec);
+double time2gpst(gtime_t t, int *week);
+
 #endif /* GLOBAL_H_ */

@@ -48,3 +48,6 @@ double SatClk(GPS_BRDEPH *gps_brd, double t0);
 
 double ionmodel(gtime_t t, const double *ion, const double *pos,
                 const double *azel);
+
+double tropmodel(gtime_t time, const double *pos, const double *azel,
+                 double humi);

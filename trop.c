@@ -8,7 +8,7 @@
 *          double humi      I   relative humidity
 * return : tropospheric delay (m)
 *-----------------------------------------------------------------------------*/
-extern double tropmodel(gtime_t time, const double *pos, const double *azel,
+double tropmodel(gtime_t time, const double *pos, const double *azel,
                         double humi)
 {
     const double temp0=15.0; /* temparature at sea level */

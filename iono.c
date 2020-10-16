@@ -21,8 +21,7 @@ double norm(const double *a,int n)
 }
 
 
-double ionmodel(gtime_t t, const double *ion, const double *pos,
-                       const double *azel)
+double ionmodel(gtime_t t, const double *ion, const double *pos, const double *azel)
 {
     const double ion_default[]={ /* 2004/1/1 */
         0.1118E-07,-0.7451E-08,-0.5961E-07, 0.1192E-06,

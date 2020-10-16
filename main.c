@@ -40,7 +40,6 @@ void initialize() {
 }
 
 
-
 int main(int argc, char *args[]) {
     RNXHEAD HD = {0};
     RNXOBS OB = {0};
@@ -72,7 +71,10 @@ int main(int argc, char *args[]) {
 // //    wite status.log
     fp = fopen("../data/status.log", "w");
     fprintf(fp,
-  "PRN      X           Y            Z          TIME_SEND        OBS_L1       OBS_L2        S_X           S_Y          S_Z           S_VZ        S_VY       S_VZ        SATCLK      TRP    ION    EARTH_ROT   RELA    TGD     ELEV  \n");
+            "PRN      X           Y            Z         "
+            " TIME_SEND        OBS_L1       OBS_L2        S_X         "
+            "  S_Y          S_Z           S_VZ        S_VY       S_VZ     "
+            "   SATCLK           TRP     ION   EARTH_ROT   RELA    TGD     ELEV  \n");
 
     int obsCountAva = 0;
     const int OBSCOUNTMAX = 40;  //
@@ -109,26 +111,31 @@ int main(int argc, char *args[]) {
                         elevazel(&satPos[obsCountAva], &groundRef, azel);
 
                         double satClk = SatClk(&ephgps[0][i - 1], t - t_spread);
-                        double trp = 0;
+
 
                         double pos[3];
                         ecef2pos(&groundRef, pos);
                         double ionPara[] = {0.9313e-08, 0.1490e-07, -0.5960e-07, -0.1192e-06,
                                             0.8806e+05, 0.4915e+05, -0.1311e+06, -0.3277e+06};
-                        gtime_t gtime = epoch2time(&ephgps);    //BUG
-//                        double ion = ionmodel(gtime, ionPara, &pos, &azel);
-                        double ion = 0;
+
+                        int iyear, imonth, iday, ih, imin;
+                        double sec;
+                        mjd2date(OB.jd, OB.tsec, &iyear, &imonth, &iday, &ih, &imin, &sec);
+                        double ep[]={iyear,imonth,iday,ih,imin,sec};
+                        gtime_t gtime = epoch2time(&ep);
+                        double ion = ionmodel(gtime, ionPara, &pos, &azel);
+                        double trp = tropmodel(gtime, &pos, &azel, 0.5);
                         double tgd = 0;
-//                        printf("azim:%9.3lf elev %9.3lf\n", azel[0] * RAD2DEG, azel[1] * RAD2DEG);
-//                        fprintf(fp, "%s ", OB.cprn[k]);
-//                        fprintf(fp, "%12.3f  %12.3f  %12.3f ", groundRef.X, groundRef.Y, groundRef.Z);
-//                        fprintf(fp, "%d %6.3f ", 58961, fmod(t, 24 * 3600) - t_spread);
-//                        fprintf(fp, "%12.3f  %12.3f ", c1w, c2w);
-//                        fprintf(fp, "%13.3f  %13.3f  %13.3f ",
-//                                satPos[obsCountAva].X, satPos[obsCountAva].Y, satPos[obsCountAva].Z);
-//                        fprintf(fp, "%9.3f  %9.3f  %9.3f ", satVel.X, satVel.Y, satVel.Z);
-//                        fprintf(fp, "   %11.3f     %6.2f  %6.2f  %6.2f      %6.2f  %6.2f %5.2f\n",
-//                                satClk, 0.0, ion, earthRot_corr, relative_corr, tgd, azel[1] * RAD2DEG);
+                        printf("azim:%9.3lf elev %9.3lf\n", azel[0] * RAD2DEG, azel[1] * RAD2DEG);
+                        fprintf(fp, "%s ", OB.cprn[k]);
+                        fprintf(fp, "%12.3f  %12.3f  %12.3f ", groundRef.X, groundRef.Y, groundRef.Z);
+                        fprintf(fp, "%d %6.3f ", 58961, fmod(t, 24 * 3600) - t_spread);
+                        fprintf(fp, "%12.3f  %12.3f ", c1w, c2w);
+                        fprintf(fp, "%13.3f  %13.3f  %13.3f ",
+                                satPos[obsCountAva].X, satPos[obsCountAva].Y, satPos[obsCountAva].Z);
+                        fprintf(fp, "%9.3f  %9.3f  %9.3f ", satVel.X, satVel.Y, satVel.Z);
+                        fprintf(fp, "   %11.3f     %6.2f  %6.2f  %6.2f      %6.2f  %6.2f %5.2f\n",
+                                satClk, trp, ion, earthRot_corr, relative_corr, tgd, azel[1] * RAD2DEG);
 
                         obs_c1w[obsCountAva] = c1w;
                         corr[obsCountAva] = -satClk + trp + ion + earthRot_corr + relative_corr + tgd;
@@ -141,7 +148,7 @@ int main(int argc, char *args[]) {
             }
         }
     }
-//    fclose(fp);
+    fclose(fp);
     SPP(&sitPos, &satPos, &obs_c1w, &corr, obsCountAva, &elev);
 
     printf("process done!\n");

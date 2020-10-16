@@ -51,7 +51,7 @@ extern void time2epoch(gtime_t t, double *ep)
 *          double sec       I   time of week in gps time (s)
 * return : gtime_t struct
 *-----------------------------------------------------------------------------*/
-extern gtime_t gpst2time(int week, double sec)
+gtime_t gpst2time(int week, double sec)
 {
     gtime_t t=epoch2time(gpst0);
     
@@ -66,7 +66,7 @@ extern gtime_t gpst2time(int week, double sec)
 *          int    *week     IO  week number in gps time (NULL: no output)
 * return : time of week in gps time (s)
 *-----------------------------------------------------------------------------*/
-extern double time2gpst(gtime_t t, int *week)
+double time2gpst(gtime_t t, int *week)
 {
     gtime_t t0=epoch2time(gpst0);
     time_t sec=t.time-t0.time;
