@@ -39,20 +39,70 @@ void initialize() {
     strcpy(CKF.cobs, "SF");
 }
 
+void Swap(double *a, double *b) {
+    double temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void SortEph() {
+    for (int i = 0; i < MAXEPH - 1; i++) {
+        for (int j = 0; j < MAXEPH - 1 - i; ++j) {
+            if ((ephgps[0][j].cprn[0] != 0)
+                && (ephgps[0][j].cprn[1] == ephgps[0][j + 1].cprn[1])
+                && (ephgps[0][j].cprn[2] == ephgps[0][j + 1].cprn[2])
+                && (ephgps[0][j].toe > ephgps[0][j + 1].toe)
+                && (ephgps[0][j].mjd == ephgps[0][j + 1].mjd)) {
+                Swap(&(ephgps[0][j].toe), &(ephgps[0][j + 1].toe));
+                Swap(&(ephgps[0][j].sod), &(ephgps[0][j + 1].sod));
+                Swap(&(ephgps[0][j].a0), &(ephgps[0][j + 1].a0));
+                Swap(&(ephgps[0][j].a1), &(ephgps[0][j + 1].a1));
+                Swap(&(ephgps[0][j].a2), &(ephgps[0][j + 1].a2));
+                Swap(&(ephgps[0][j].aode), &(ephgps[0][j + 1].aode));
+                Swap(&(ephgps[0][j].crs), &(ephgps[0][j + 1].crs));
+                Swap(&(ephgps[0][j].dn), &(ephgps[0][j + 1].dn));
+                Swap(&(ephgps[0][j].m0), &(ephgps[0][j + 1].m0));
+                Swap(&(ephgps[0][j].e), &(ephgps[0][j + 1].e));
+                Swap(&(ephgps[0][j].cus), &(ephgps[0][j + 1].cus));
+                Swap(&(ephgps[0][j].roota), &(ephgps[0][j + 1].roota));
+                Swap(&(ephgps[0][j].cic), &(ephgps[0][j + 1].cic));
+                Swap(&(ephgps[0][j].Omega0), &(ephgps[0][j + 1].Omega0));
+                Swap(&(ephgps[0][j].cic), &(ephgps[0][j + 1].cic));
+                Swap(&(ephgps[0][j].i0), &(ephgps[0][j + 1].i0));
+                Swap(&(ephgps[0][j].cic), &(ephgps[0][j + 1].cic));
+                Swap(&(ephgps[0][j].omega), &(ephgps[0][j + 1].omega));
+                Swap(&(ephgps[0][j].Omega_dot), &(ephgps[0][j + 1].Omega_dot));
+                Swap(&(ephgps[0][j].i_dot), &(ephgps[0][j + 1].i_dot));
+                Swap(&(ephgps[0][j].resvd0), &(ephgps[0][j + 1].resvd0));
+                Swap(&(ephgps[0][j].week), &(ephgps[0][j + 1].week));
+                Swap(&(ephgps[0][j].resvd1), &(ephgps[0][j + 1].resvd1));
+                Swap(&(ephgps[0][j].accu), &(ephgps[0][j + 1].accu));
+                Swap(&(ephgps[0][j].hlth), &(ephgps[0][j + 1].hlth));
+                Swap(&(ephgps[0][j].tgd), &(ephgps[0][j + 1].tgd));
+                Swap(&(ephgps[0][j].aodc), &(ephgps[0][j + 1].aodc));
+                Swap(&(ephgps[0][j].delta_A), &(ephgps[0][j + 1].delta_A));
+                Swap(&(ephgps[0][j].A_DOT), &(ephgps[0][j + 1].A_DOT));
+                Swap(&(ephgps[0][j].delta_n_dot), &(ephgps[0][j + 1].delta_n_dot));
+            }
+        }
+    }
+
+}
+
 
 void GetData(RNXOBS *OB, int *obsCountAva, Coord *satPos, Coord *groundRef, double t, double *obs_c1w, double *corr,
              double *elev) {
-    int counter = 0; //加快循环, 使得循环一次 MAXEPH
     for (int k = 0; k < MAXSAT; k++) {
         double c1w = OB->obs[k][3];
         double c2w = OB->obs[k][4];
         if (fabs(c1w) > 1e-3) {
             double toe = 99999999999999999999.0;
             double dt = fabs(t - toe);
-            for (int i = counter; i < MAXEPH; i++) {
+            for (int i = 0; i < MAXEPH - 1; i++) {
                 // 寻找最近参考时刻
                 if (!strcmp(ephgps[0][i].cprn, OB->cprn[k])) {
-                    if (fabs(t - ephgps[0][i].toe) < dt) {
+                    if ((fabs(t - ephgps[0][i].toe) < dt)
+                    &&(ephgps[0][i+1].cprn[2] ==  ephgps[0][i].cprn[2])) {  //for the last epoch
                         toe = ephgps[0][i].toe;
                         dt = fabs(t - toe);
                     } else //假定星历按时间顺序排列, 最佳时间差值为最小, 此前时间差值一直递减, 一旦不再出现递减, 则上次循环为最佳参考历元
@@ -78,13 +128,12 @@ void GetData(RNXOBS *OB, int *obsCountAva, Coord *satPos, Coord *groundRef, doub
                         gtime_t gtime = epoch2time(&ep);
                         double ion = ionmodel(gtime, ionPara, &pos, &azel);
                         double trp = tropmodel(gtime, &pos, &azel, 0.5);
-                        double tgd = 0;
+                        double tgd = TGD(ephgps[0][i - 1].cprn);
 
                         obs_c1w[*obsCountAva] = c1w;
                         corr[*obsCountAva] = -satClk + trp + ion + earthRot_corr + relative_corr + tgd;
                         elev[*obsCountAva] = azel[1] * RAD2DEG;
                         (*obsCountAva)++;
-                        counter = i;
                         break;
                     }
                 }
@@ -112,6 +161,7 @@ int main(int argc, char *args[]) {
     }
     read_rnxobs_head(&HD, fp);
     read_rnxnav('M', pfilbrdm, CKF.mjd, CKF.mjd + 1, &brdhd, neph, ephgps, ephgls);
+    SortEph();
 
     const int OBSCOUNTMAX = 40;  //
     Coord sitPos = {0, 0, 0};
@@ -120,22 +170,34 @@ int main(int argc, char *args[]) {
     double corr[OBSCOUNTMAX];
     double obs_c1w[OBSCOUNTMAX];
     double elev[OBSCOUNTMAX];
+    Coord sitPos_ref = {-2341333.112, -3539049.520, 4745791.248};
     int week;
     double sow;
 
+    double sigma;
+
     FILE *fpPos = fopen("../data/ecef.txt", "w");
-    for (CKF.sod = 0; CKF.sod <3600*23 ; CKF.sod += 1.0) {
+    for (CKF.sod = 0; CKF.sod < 3600 * 24; CKF.sod += 30.0) {
         read_rnxobs(fp, CKF.mjd, CKF.sod, CKF.nprn, CKF.cprn, CKF.nfreq, CKF.freq, &HD, &OB);
-        if(fabs(OB.tsec - CKF.sod)>0.1)
+        if (fabs(OB.tsec - CKF.sod) > 0.1)
             continue;
         int obsCountAva = 0;
 
         mjd2wksow(CKF.mjd, CKF.sod, &week, &sow);
 //        GetData(&OB, &obsCountAva, &satPos, &groundRef, sow, &obs_c1w, &corr, &elev);
-        GetData(&OB, &obsCountAva, &satPos, &sitPos, sow, &obs_c1w, &corr, &elev);
-        SPP(&sitPos, &satPos, &obs_c1w, &corr, obsCountAva, &elev);
+        GetData(&OB, &obsCountAva, &satPos, &groundRef, sow, &obs_c1w, &corr, &elev);
 
-        fprintf(fpPos, "%6.0f  %10.3f  %10.3f  %10.3f\n", CKF.sod, sitPos.X, sitPos.Y, sitPos.Z);
+//        sitPos.X=0;
+//        sitPos.Y=0;
+//        sitPos.Z=0;
+        SPP(&sitPos, &satPos, &obs_c1w, &corr, obsCountAva, &elev, &sigma);
+        double errX = sitPos_ref.X - sitPos.X;
+        double errY = sitPos_ref.Y - sitPos.Y;
+        double errZ = sitPos_ref.Z - sitPos.Z;
+        double pos_rms = sqrt((errX * errX + errY * errY + errZ * errZ) / 3.0);
+        fprintf(fpPos, "%6.0f  %10.3f  %10.3f  %10.3f  %8.3f %8.3f %8.3f %6.3f %6.3f %d\n", CKF.sod, sitPos.X, sitPos.Y,
+                sitPos.Z,
+                errX, errY, errZ, sigma, pos_rms, obsCountAva);
     }
     fclose(fpPos);
     fclose(fp);

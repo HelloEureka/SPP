@@ -166,3 +166,19 @@ double SatClk(GPS_BRDEPH *gps_brd, double t0) {
     return (gps_brd->a0 + gps_brd->a1 * dt + gps_brd->a2 * dt * dt) * CLIGHT;
 }
 
+double TGD(char cprn[4]){
+    FILE *fp = fopen("../data/tgd_sav", "r");
+    char prn[4];
+    char buf[12];
+    double tgd=0;
+    while (fgets(buf, 12, fp) != NULL)
+    {
+        if (buf[1]==cprn[1] && buf[2]==cprn[2]){
+            sscanf(buf,"%s %lf\n", &prn, &tgd);
+            break;
+        }
+    }
+    fclose(fp);
+    return tgd;
+
+}

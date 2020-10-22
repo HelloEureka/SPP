@@ -44,7 +44,7 @@ int azel_demo();
 
 double SatClk(GPS_BRDEPH *gps_brd, double t0);
 
-
+double TGD(char cprn[4]);
 
 double ionmodel(gtime_t t, const double *ion, const double *pos,
                 const double *azel);

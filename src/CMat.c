@@ -228,26 +228,6 @@ void CMat_Transpose(double *A, int row, int col) {
 }
 
 
-void demo() {
-    // matrix is column major
-    double norm[3 * 3] = {1, 2, 3, 6, 3, 5, 4, 8, 9};
-    double A[3] = {4, 5, 6}, L[3];
-    CMat_Matmul("NN", 3, 1, 3, 1.0, norm, A, 0.0, L);
-    printf("norm(3*3) * A(3*1) = L(3*1)\n");
-    CMat_PrintMatrix(norm, 3, 3, "norm");
-    CMat_PrintMatrix(A, 3, 1, "A");
-    CMat_PrintMatrix(L, 3, 1, "L");
-
-    double normCopy[3 * 3];
-    CMat_Copy(&normCopy, &norm, 3, 3);
-
-    CMat_Inverse(norm, 3, 3);
-    printf("inverse of norm(3*3) is :\n");
-    CMat_PrintMatrix(norm, 3, 3, "norm");
-    CMat_Transpose(norm, 3, 3);
-    CMat_PrintMatrix(normCopy, 3, 3, "T");
-}
-
 void CMat_Copy(double *des, double *src, int col, int row) {
     int len = col * row;
     for (int i = 0; i < len; ++i) {
@@ -270,5 +250,11 @@ void Mat_Add(double *A, double *B, int row, int col) {
     }
 }
 
+void Mat_Minus(double *A, double *B, int row, int col) {
+    int len = row * col;
+    for (int i = 0; i < len; i++) {
+        A[i] -= B[i];
+    }
+}
 
 

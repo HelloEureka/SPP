@@ -39,10 +39,9 @@ static int ludcmp(double *A, int n, int *indx, double *d);
 
 void CMat_Copy(double *des, double *src, int col, int row);
 
-void demo();
-
 double Mat_Norm(double *A, int len);
 
 void Mat_Add(double *A, double *B, int row, int col);
 
+void Mat_Minus(double *A, double *B, int row, int col);
 #endif /* INCLUDE_COM_CMAT_H_ */
