@@ -9,6 +9,31 @@
 #include "rnx.h"
 #include "global.h"
 
+void initialize() {
+    int isat, isys;
+    memset(&CKF, 0, sizeof(CKDCFG));
+    strcpy(SYS, "GCRESJI");
+    strcpy(OBSTYPE, "PWCIXSAQLDBYMZN ");
+    // initialize the cprn
+    for (isat = 0; isat < 32; isat++) {
+        sprintf(CKF.cprn[isat], "G%02d", isat + 1);
+    }
+    CKF.nprn = 32;
+    for (isys = 0; isys < MAXSYS; isys++) {
+        switch (SYS[isys]) {
+            case 'G':
+                strcpy(CKF.freq[isys][0], "L1");
+                strcpy(CKF.freq[isys][1], "L2");
+                CKF.nfreq[isys] = 2;
+                break;
+            default:
+                break;
+        }
+    }
+    strcpy(CKF.cobs, "SF");
+}
+
+
 void read_rnxnav(char csys, const char *flnbrd, double mjd0, double mjd1, BRDHEAD *hd,
                  int *neph, GPS_BRDEPH ephm[MAXSYS][MAXEPH], GLONASS_BRDEPH ephg[MAXEPH])
 {

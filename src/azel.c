@@ -1,19 +1,7 @@
+/*
+ * azimth and elev
+ * sit - > sat*/
 #include "SatPos.h"
-
-/* inner product ---------------------------------------------------------------
-* inner product of vectors
-* args   : double *a,*b     I   vector a,b (n x 1)
-*          int    n         I   size of vector a,b
-* return : a'*b
-*-----------------------------------------------------------------------------*/
-extern double dot(const double *a, const double *b, int n) {
-    double c = 0.0;
-
-    while (--n >= 0)
-        c += a[n] * b[n];
-
-    return c;
-}
 
 /* transform ecef to geodetic postion ------------------------------------------
 * transform ecef position to geodetic position

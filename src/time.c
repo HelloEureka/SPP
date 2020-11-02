@@ -1,5 +1,10 @@
 #include "global.h"
 #include <math.h>
+#include "time.h"
+
+
+
+
 /* convert calendar day/time to time -------------------------------------------
 * convert calendar day/time to gtime_t struct
 * args   : double *ep       I   day/time {year,month,day,hour,min,sec}
